@@ -1,0 +1,50 @@
+[
+  {
+    "Nome": "Gabriel de Oliveira Bezerra",
+    "CPF": "025.157.183-10",
+    "User": "gabrieloliveira",
+    "Senha": "loja02",
+    "Permissao": "admin"
+  },
+  {
+    "Nome": "Thiago Alves Andrade",
+    "CPF": "075.369.613-40",
+    "User": "th",
+    "Senha": "zenir02",
+    "Permissao": "fat"
+  },
+
+  {
+    "Nome": "Adriana Gomes de Souza",
+    "CPF": "987.654.321-00",
+    "User": "drika",
+    "Senha": "drika1981",
+    "Permissao": "admin"
+  },
+
+  {
+    "Nome": "Júlia Gabriely Gomes Fernandes",
+    "CPF": "987.654.321-00",
+    "User": "juliagabriely",
+    "Senha": "julia1802",
+    "Permissao": "suporte"
+  },
+
+  {
+    "Nome": "Fernando Enrique Martins Vieira",
+    "CPF": "987.654.321-00",
+    "User": "fernando",
+    "Senha": "zenir02",
+    "Permissao": "vendedor",
+    "assinatura": "assfernando.png"
+  },
+
+  {
+    "Nome": "Ismael Carlos de Souza",
+    "CPF": "987.654.321-00",
+    "User": "ismael",
+    "Senha": "0",
+    "Permissao": "vendedor",
+    "assinatura": "assismael.png"
+  }
+]

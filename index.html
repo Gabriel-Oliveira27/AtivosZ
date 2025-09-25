@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>AtivosZ</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="icon" type="image/png" href="Imagens/zenirlogo.png">
+
+<link rel="stylesheet" href="css/styles.css">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="js/script.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
+
+</head>
+<body>
+
+<div id="overlay">
+  <div class="overlay-box">
+    <div class="spinner"></div>
+    <p id="overlay-texto">Iniciando busca...</p>
+  </div>
+</div>
+
+ <div id="formulario">
+  
+
+<div id="logo-container">
+  <img src="https://media.licdn.com/dms/image/v2/D4E16AQEUytzqhs0Y6A/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1683674799395?e=1759968000&v=beta&t=7hnnOollL4pNghNs1Y2B_MfcN5Kb-FMQokAhTCYwcWU" alt="Logo Zenir" />
+</div>
+<div id="config-cartaz">
+  <div class="input-wrapper">
+    <i class="fa-solid fa-file"></i>
+    <select id="formato">
+      <option value="a4">A4</option>
+      <option value="a5">A5</option>
+      <option value="a6">A6</option>
+    </select>
+  </div>
+  <button id="btn-cartaz">Cartaz Composto</button>
+<button id="btnUtilidades">Utilidades</button>
+</div>
+
+
+<!-- Popup (overlay) -->
+<div id="popup-cartaz" class="popup-overlay">
+    <div class="popup-content">
+    <button id="fechar-popup" class="close-btn">&times;</button>
+    <h2>Cartaz Composto</h2>
+     <div class="tabs">
+      <div class="tab active" data-tab="camabox">
+        <i class="fa-solid fa-bed"></i> Cama box
+     </div>
+      <div class="tab" data-tab="mesacad">
+        <i class="fa-solid fa-chair"></i> Mesa/Cadeiras
+      </div>
+      <div class="tab" data-tab="cameba">
+        <i class="fa-solid fa-couch"></i> Cameba
+      </div>
+    </div>
+
+    <!-- Conteúdos de cada aba -->
+   <!-- Painéis das abas -->
+<div class="tab-panels">
+
+  <!-- Painel: Cama box (data-panel precisa bater com data-tab="config") -->
+  <div class="tab-panel active" data-panel="camabox">
+    <div class="cbx-grid">
+
+      <!-- Linha 1 -->
+      <div class="cbx-row">
+        <div class="input-group">
+          <label for="cbx_codigo1">Código 1</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-barcode"></i>
+            <input type="tel" id="cbx_codigo1" placeholder="Ex.: 110056">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_desc1">Descrição 1</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-font"></i>
+            <input type="text" id="cbx_desc1" readonly>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_avista1">Total à vista 1</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <input type="text" id="cbx_avista1" readonly>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_garantia1">Garantia 1</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-shield"></i>
+            <input type="text" id="cbx_garantia1" placeholder="Ex.: 199,90">
+          </div>
+        </div>
+      </div>
+
+      <!-- Linha 2 -->
+      <div class="cbx-row">
+        <div class="input-group">
+          <label for="cbx_codigo2">Código 2</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-barcode"></i>
+            <input type="tel" id="cbx_codigo2" placeholder="Ex.: 220078">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_desc2">Descrição 2</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-font"></i>
+            <input type="text" id="cbx_desc2" readonly>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_avista2">Total à vista 2</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <input type="text" id="cbx_avista2" readonly>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_garantia2">Garantia 2</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-shield-halved"></i>
+            <input type="text" id="cbx_garantia2" placeholder="Ex.: 249,90">
+          </div>
+        </div>
+      </div>
+
+      <!-- Linha final: descrição composta + marca -->
+      <div class="cbx-row cbx-bottom">
+        <div class="input-group">
+          <label for="cbx_desc_montada">Descrição composta (editável)</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <input type="text" id="cbx_desc_montada" placeholder="Ex.: CONJ. BOX [...] 138x188x58">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="cbx_marca">Marca</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-tag"></i>
+            <input type="text" id="cbx_marca" placeholder="Ex.: ORTOBOM">
+          </div>
+        </div>
+      </div>
+
+      <div class="cbx-actions">
+  <button type="button" id="cbx_add" onclick="adicionarNoFormComposto('cama')">
+          <i class="fa-solid fa-plus"></i> Usar no formulário principal
+          </button>
+            <button type="button" id="cbx_clear">
+    <i class="fa-solid fa-trash"></i> Limpar
+  </button>
+        </div>
+
+    </div>
+  </div>
+
+  <!-- Painéis das outras abas (placeholders) -->
+<!-- Painel: Mesa/Cadeiras -->
+<div class="tab-panel" data-panel="mesacad">
+  <div class="mc-grid">
+
+<!-- Linha Mesa -->
+<div class="mc-row mesa">
+  <div class="input-group">
+    <label for="mc_codigoMesa">Código Mesa</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-barcode"></i>
+      <input type="tel" id="mc_codigoMesa" placeholder="Ex.: 330012">
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="mc_descMesa">Descrição Mesa</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-font"></i>
+      <input type="text" id="mc_descMesa" readonly>
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="mc_avistaMesa">Tot. à vista mesa</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <input type="text" id="mc_avistaMesa" readonly>
+    </div>
+  </div>
+  <div class="input-group">
+      <label for="mc-garantia1">Garantia 1</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-shield"></i>
+          <input type="text" id="mc-garantia1" placeholder="Ex.: 199,90">
+        </div>
+    </div>
+</div>
+
+<!-- Linha Cadeiras -->
+<div class="mc-row cadeira">
+  <div class="input-group">
+    <label for="mc_codigoCad">Cód. Cadeiras</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-barcode"></i>
+      <input type="tel" id="mc_codigoCad" placeholder="Ex.: 440045">
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="mc_descCad">Descrição Cadeiras</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-font"></i>
+      <input type="text" id="mc_descCad" readonly>
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="mc_avistaCad">Tot. à vista Cad.</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <input type="text" id="mc_avistaCad" readonly>
+    </div>
+  </div>
+    <div class="input-group">
+      <label for="mc-garantia2">Garantia 2</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-shield"></i>
+          <input type="text" id="mc-garantia2" placeholder="Ex.: 199,90">
+        </div>
+    </div>
+</div>
+      
+<!-- Linha final: Descrição composta, Marca, Quantidade -->
+<div class="mc-row mc-bottom">
+  <div class="input-group">
+    <label for="mc_descMontada">Descrição composta (editável)</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-pen-to-square"></i>
+      <input type="text" id="mc_descMontada" placeholder="Ex.: MESA DE JANTAR + 4 CADEIRAS XYZ">
+    </div>
+  </div>
+  <div class="input-group">
+    <label for="mc_marca">Marca</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-tag"></i>
+      <input type="text" id="mc_marca" placeholder="Ex.: MÓVEIS ABC">
+    </div>
+  </div>
+ <div class="input-group">
+  <label for="mc_qtd">Qtd. Cadeiras</label>
+  <div class="input-wrapper">
+    <i class="fa-solid fa-chair"></i>
+    <select id="mc_qtd">
+      <option value="">Selecione...</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+    </select>
+  </div>
+</div>
+</div>
+
+<!-- Botão -->
+<div class="cbx-actions">
+  <button type="button" id="mc_add" onclick="adicionarNoFormComposto('mesa')">
+    <i class="fa-solid fa-plus"></i> Usar no formulário principal
+  </button>
+  <button type="button" id="mc_clear">
+    <i class="fa-solid fa-trash"></i> Limpar
+  </button>
+</div>
+
+  </div>
+</div>
+
+  <div class="tab-panel" data-panel="cameba">
+  <div class="coming-soon">
+    <div class="progress-container">
+      <div class="progress-bar"></div>
+    </div>
+    <p class="status-text">Aguardando... <span class="percent-text">0%</span></p>
+    <img src="Imagens/zenirlogo.png" alt="Logo da Empresa" class="logo" />
+  </div>
+
+  <div class="error-overlay">
+    <p>Erro no carregamento… tentando novamente 🔄</p>
+  </div>
+</div>
+</div>
+
+    </div>
+</div>
+
+<div id="utilidadesPainel" class="painel">
+  <div class="painel-header">
+    <div class="abas">
+      <div class="aba ativa" data-alvo="mostruario">Declaração de Mostruário</div>
+      <div class="aba" data-alvo="central">Declaração de Central</div>
+      <div class="aba" data-alvo="devolucao">Declaração de Devolução</div>
+    </div>
+    <button id="fecharPainel" class="btn-fechar">×</button>
+  </div>
+
+<div class="painel-conteudo">
+   <div id="mostruario" class="conteudo-aba ativo">
+  <h3>Declaração de Mostruário</h3>
+  
+  <form id="formMostruario">
+
+    <!-- CPF, Nome completo e PV na mesma linha -->
+    <div class="linha">
+      <div class="campo cpf">
+        <label for="cpf">CPF do Cliente</label>
+        <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00">
+      </div>
+      <div class="campo nome">
+        <label for="nomeCliente">Nome completo</label>
+        <input type="text" id="nomeCliente" name="nomeCliente" placeholder="Digite o nome completo">
+      </div>
+      <div class="campo pv">
+        <label for="pv">PV</label>
+        <input type="text" id="pv" name="pv" placeholder="123456/25">
+      </div>
+    </div>
+
+    <!-- Vendedor + Botão na mesma linha -->
+    <div class="linha">
+      <div class="campo vendedor">
+        <label for="vendedor">Vendedor</label>
+          <select id="selectVendedores">
+            <option value="">Selecione um vendedor...</option>
+          </select>
+        
+      </div>
+      <div class="campo gerar">
+        <label>&nbsp;</label> 
+        <button type="button" id="gerarDeclaracao">Gerar Declaração</button>
+      </div>
+    </div>
+  </form>
+
+  <div id="overlayPDF" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center; flex-direction:column; color:#fff; font-size:18px;">
+  <div class="spinner"></div>
+  <div style="margin-top:10px;">Gerando PDF, aguarde...</div>
+</div>
+
+</div>
+
+
+
+
+
+   <div class="conteudo-aba" id="central">
+  <h3>Declaração de Central</h3>
+
+  <form id="formCentral">
+    <!-- CPF do cliente e PV na mesma linha -->
+    <div class="linha">
+      <div class="campo cpf">
+        <label for="centralCPF">CPF do Cliente</label>
+        <input type="text" id="centralCPF" name="centralCPF" placeholder="000.000.000-00">
+      </div>
+      <div class="campo pv">
+        <label for="centralPV">PV</label>
+        <input type="text" id="centralPV" name="centralPV" placeholder="123456/25">
+      </div>
+    </div>
+
+    <!-- Atendente + Botão na mesma linha -->
+    <div class="linha">
+      <div class="campo vendedor">
+
+      
+      </div>
+      <div class="campo gerar">
+        <label>&nbsp;</label> 
+        <button type="button" id="gerarCentral">Gerar Declaração</button>
+      </div>
+    </div>
+  </form>
+
+  
+</div>
+
+<div id="devolucao" class="conteudo-aba">
+  <h3>Declaração de Devolução</h3>
+
+  <form id="formDevolucao">
+
+    <!-- Linha 1 -->
+    <div class="linha">
+      <div class="campo pequeno">
+        <label for="nfeDevolucao">NF-e de Devolução</label>
+        <input type="text" id="nfeDevolucao" maxlength="7" placeholder="0000000">
+      </div>
+      <div class="campo grande">
+        <label for="nomeClienteDev">Nome do Cliente</label>
+        <input type="text" id="nomeClienteDev" placeholder="Digite o nome completo">
+      </div>
+      <div class="campo medio">
+        <label for="cpfDev">CPF</label>
+        <input type="text" id="cpfDev" placeholder="000.000.000-00">
+      </div>
+      <div class="campo pequeno">
+        <label for="filialDev">Filial</label>
+        <input type="text" id="filialDev" maxlength="3" placeholder="Exemplo: 02">
+      </div>
+    </div>
+
+    <!-- Produtos -->
+    <h4>Produto(s):</h4>
+    <div id="produtosContainer">
+      <div class="linha produto">
+        <div class="campo pequeno">
+          <label>Código</label>
+          <input type="text" maxlength="7">
+        </div>
+        <div class="campo grande">
+          <label>Descrição</label>
+          <input type="text">
+        </div>
+        <div class="campo pequeno">
+          <label>Qtd</label>
+          <input type="number" min="1" max="999">
+        </div>
+        <div class="campo medio">
+          <label>VR. Unit.</label>
+          <input type="text">
+        </div>
+        <div class="campo medio">
+          <label>VR. Total</label>
+          <input type="text">
+        </div>
+      </div>
+    </div>
+
+    <!-- Endereço -->
+    <div class="linha">
+      <div class="campo grande">
+        <label for="enderecoDev">Endereço</label>
+        <div class="input-wrapper">
+           <input type="text" id="enderecoDev" placeholder="Rua, Avenida">
+           <span class="icon-lupa" id="abrirCepModal">&#128269;</span>
+        </div>
+      </div>
+      <div class="campo pequeno">
+        <label for="numeroDev">Número</label>
+        <input type="text" id="numeroDev" maxlength="4">
+      </div>
+      <div class="campo medio">
+        <label for="bairroDev">Bairro</label>
+        <input type="text" id="bairroDev">
+      </div>
+      <div class="campo medio">
+        <label for="cidadeDev">Cidade</label>
+        <input type="text" id="cidadeDev">
+      </div>
+      <div class="campo uf">
+        <label for="ufDev">UF</label>
+        <input type="text" id="ufDev" maxlength="2">
+      </div>
+    </div>
+
+    <!-- PV / Cupom / Nova Compra -->
+    <div class="linha">
+      <div class="campo medio">
+        <label for="pvDev">PV</label>
+        <input type="text" id="pvDev" maxlength="9" placeholder="123456/78">
+      </div>
+      <div class="campo medio">
+        <label for="cupomDev">Cupom Fiscal / NF-e Venda</label>
+        <input type="text" id="cupomDev">
+      </div>
+      <div class="campo pequeno">
+        <label for="novaCompraDev">Nova Compra?</label>
+        <select id="novaCompraDev">
+          <option value="">Selecione</option>
+          <option value="Sim">Sim</option>
+          <option value="Nao">Não</option>
+        </select>
+      </div>
+      <div class="campo pequeno" id="novoPVWrapper" style="display:none;">
+        <label for="novoPVDev">Novo PV</label>
+        <input type="text" id="novoPVDev" maxlength="9">
+      </div>
+    </div>
+
+    <!-- Motivo -->
+    <div class="linha">
+      <div class="campo extra-grande">
+        <label for="motivoDev">Motivo da Devolução</label>
+        <textarea id="motivoDev" rows="3" placeholder="Descreva o motivo..."></textarea>
+      </div>
+    </div>
+    
+
+    <!-- Botão Gerar -->
+    <div class="linha">
+      <button type="button" id="gerarDevolucao">Gerar PDF</button>
+    </div>
+  </form>
+
+  <div id="overlayDev" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;justify-content:center;align-items:center;">
+  <div class="spinnerDev"></div>
+</div>
+</div>
+
+
+<!-- Modal exclusivo para CEP -->
+<div id="cep-modal" class="cep-modal">
+  <div class="cep-modal-content">
+    <h2>Buscar CEP</h2>
+    <input 
+      type="text" 
+      id="cepInput" 
+      maxlength="8" 
+      placeholder="Digite o CEP (somente números)"
+    >
+    <div class="cep-modal-buttons">
+      <button id="buscarCep">Buscar</button>
+      <button id="fecharCepModal">Fechar</button>
+    </div>
+    <div id="resultadoCEP"></div>
+  </div>
+</div>
+
+<div id="avisoModal" class="modal">
+  <div class="modal-content">
+    <p id="avisoTexto">Campos importantes ainda não preenchidos!</p>
+    <div class="modal-botoes">
+      <button id="continuarBtn"> <i class="fa-solid fa-pencil-alt"></i> Continuar editando</button>
+      <button id="gerarMesmoBtn"> <i class="fa-solid fa-print"></i> Gerar mesmo assim</button>
+    </div>
+  </div>
+</div>
+    
+    
+   </div>
+</div>
+
+<div id="loginOverlay" style="display:none;">
+  <div class="login-box">
+    <h3>Autenticação necessária</h3>
+    <label>Usuário:</label>
+    <input type="text" id="loginUser"><br>
+    <label>Senha:</label>
+    <input type="password" id="loginPass"><br>
+    <button id="confirmLogin">Confirmar</button>
+    <button id="cancelLogin">Cancelar</button>
+  </div>
+</div>
+
+  <!-- Código -->
+<div class="input-group search-box" id="codigo-group">
+  <label for="codigo">Código:</label>
+  <div class="search-wrapper">
+    <input type="tel" id="codigo" maxlength="15" placeholder="Ex.: 110056" />
+    <button type="button" id="btn-buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </div>
+</div>
+
+
+
+  <!-- Descrição -->
+  <div class="input-group" id="descricao-group">
+    <label for="descricao">Descrição (máx 35 caracteres):</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-tv"></i>
+      <input type="text" id="descricao" placeholder="Ex.: TV 40'' SMART LED FHD" required />
+    </div>
+    <span id="descricao-erro" style="display:none; color:red; font-size:12px;">
+      Limite de caracteres excedido
+    </span>
+  </div>
+
+  <!-- Marca -->
+  <div class="input-group" id="marca-group">
+    <label for="marca">Marca:</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-tag"></i>
+      <input type="text" id="marca" placeholder="Ex.: TCL" required />
+    </div>
+  </div>
+
+  <!-- Forma de pagamento -->
+<div class="input-group" id="metodo-group">
+    <label for="metodo">Forma de pagamento:</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-credit-card"></i>
+      <select id="metodo">
+        <option value="selecione-pag">Selecione um método de pagamento</option>
+        <option value="R$">À vista (R$)</option>
+        <option value="5x">5x</option>
+        <option value="10x">10x</option>
+        <option value="12x">12x</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Taxa de juros -->
+  <div class="input-group" id="juros-group">
+    <label for="juros">Taxa de juros:</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-percent"></i>
+      <select id="juros">
+       <option value="selecione-taxa">Selecione uma taxa</option>
+        <option value="carne">Carnê</option>
+        <option value="cartao">Cartão</option>
+        <option value="virado">Preço virado</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Valor da parcela -->
+  <div class="input-group" id="parcela-group">
+    <label for="parcela">Valor da parcela:</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-coins"></i>
+      <input type="text" id="parcela" placeholder="Ex: 199,90" required />
+    </div>
+  </div>
+
+  <!-- Valor à vista -->
+  <div class="input-group" id="avista-group">
+    <label for="avista">Valor à vista:</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <input type="text" id="avista" placeholder="Ex: 1.799,90" required />
+    </div>
+  </div>
+
+  <!-- Extra campos -->
+  <div id="extra-campos" style="display: flex; gap: 10px; grid-column: 1 / -1;">
+    <div class="input-group" id="grupo-campanha" style="flex: 1;">
+      <label for="campanha">Campanha:</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-bullhorn"></i>
+        <input type="text" id="campanha" placeholder="Ex.: OFERTAS EXTRA" />
+      </div>
+    </div>
+    <div class="input-group" style="flex: 1;">
+      <label for="validade">Validade:</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-calendar-day"></i>
+        <input type="date" id="validade" />
+      </div>
+    </div>
+    <div class="input-group" style="flex: 1;">
+      <label for="autorizacao">Autorização:</label>
+      <div class="input-wrapper">
+        <i class="fa-solid fa-user-check"></i>
+        <input type="text" id="autorizacao" placeholder="Ex.: REJANE/ALLAN KARDEC" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Garantias Estendidas -->
+<div class="garantias-container">
+  <div class="input-group">
+    <label for="garantia12">+12 meses</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-shield"></i>
+      <input type="text" id="garantia12" placeholder="199,90" />
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label for="garantia24">+24 meses</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-shield-halved"></i>
+      <input type="text" id="garantia24" placeholder="299,90" disabled />
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label for="garantia36">+36 meses</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-shield-heart"></i>
+      <input type="text" id="garantia36" placeholder="399,90" disabled />
+    </div>
+  </div>
+</div>
+
+  <!-- Botões -->
+  <div class="toolbar">
+  <button class="btn" onclick="adicionarProduto()">Adicionar Produto</button>
+  <button class="btn btn-small" onclick="scrollPrev()">&#10094;</button>
+  <button class="btn btn-small" onclick="scrollNext()">&#10095;</button>
+  <button class="btn" onclick="gerarPDF()">Gerar PDF</button>
+</div>
+
+
+</div>
+
+</div>
+
+  
+
+
+  <!-- previews -->
+  <div id="previews"></div>
+
+  <div id="output" hidden></div>
+
+</body>
+</html>
