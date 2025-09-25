@@ -1,3 +1,130 @@
+/* Overlay geral */
+#overlayverifica {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+  overflow: hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Spinner (azul girando) */
+.spinnerverifica {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  background: linear-gradient(0deg, rgba(0,123,255,0.18) 33%, #007bff 100%);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+.spinnerverifica::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: #f0f0f0; /* cinza interno */
+}
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* SVG de alerta: estilo e animação (piscar + leve escala) */
+.icon-alerta-svg {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: alertaBlink 1.2s infinite;
+}
+@keyframes alertaBlink {
+  0%   { opacity: 1; transform: scale(1); }
+  40%  { opacity: 0.15; transform: scale(0.92); }
+  70%  { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Textos (h2, h5) */
+#overlayverifica h2, #overlayverifica h5 {
+  margin: 8px 20px;
+  opacity: 0;
+  animation: fadeInText 0.9s forwards;
+  line-height: 1.2;
+}
+#overlayverifica h5 {
+  font-weight: 400;
+  color: #666;
+  font-size: 0.95rem;
+  animation-delay: 0.35s;
+}
+@keyframes fadeInText { to { opacity: 1; } }
+
+/* Responsivo: ajustar tamanhos menores */
+@media (max-width: 768px) {
+  .spinnerverifica { width: 40px; height: 40px; }
+  .spinnerverifica::after { width: 36px; height: 36px; }
+  .icon-alerta-svg { width: 60px; height: 60px; }
+  #overlayverifica h2 { font-size: 1.4rem; }
+  #overlayverifica h5 { font-size: 0.95rem; }
+}
+
+/* Acessibilidade: foco no overlay para leitores */
+#overlayverifica:focus { outline: none; }
+
+.retry-btn {
+  margin-top: 20px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
+
+/* Estado habilitado */
+.retry-btn.enabled {
+  cursor: pointer;
+  opacity: 1;
+}
+
+/* Hover refinado */
+.retry-btn.enabled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.45);
+  background: linear-gradient(135deg, #0056b3, #007bff);
+}
+
+/* Clique */
+.retry-btn.enabled:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+}
+
+
 
     input[type="text"], input[type="tel"] {
   text-transform: uppercase;
