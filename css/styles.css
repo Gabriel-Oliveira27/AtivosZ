@@ -652,32 +652,43 @@ overflow-y: auto
   flex: 1;
 }
 
+/* ===== Estilos para Impressão ===== */
+@media print {
 
-/* Garantia 12 meses - padrão A4 Azul */
-.g12-numero   { position: absolute; left: 248.7px; top: 1000.2px; font-family: Arial; font-size: 8.5pt; }
-.g12-parcela  { position: absolute; left: 311.9px; top: 1000.2px; font-family: Arial; font-size: 8.5pt; }
-.g12-total    { position: absolute; left: 311.9px; top: 1020.1px; font-family: Arial; font-size: 8.5pt; }
-.g12-cheio    { position: absolute; left: 408.0px; top: 1000.2px; font-family: Arial; font-size: 8.5pt; }
-.g12-taxa1    { position: absolute; left: 386.6px; top: 1019.9px; font-family: Arial; font-size: 5pt; }
-.g12-taxa2    { position: absolute; left: 435.8px; top: 1019.9px; font-family: Arial; font-size: 5pt; }
+  @page {
+    margin: 0; /* Remove margens padrão do navegador na impressão */
+  }
 
+  body {
+    margin: 0;
+    padding: 0;
+  }
 
+  /* Garantia 12 meses - padrão A4 Azul */
+  .g12-numero   { position: absolute; left: 6.57cm; top: 26.5cm; font-family: Arial; font-size: 8.5pt; }
+  .g12-parcela  { position: absolute; left: 8.25cm; top: 26.5cm; font-family: Arial; font-size: 8.5pt; }
+  .g12-total    { position: absolute; left: 8.25cm; top: 26.95cm; font-family: Arial; font-size: 8.5pt; }
+  .g12-cheio    { position: absolute; left: 10.8cm; top: 26.5cm; font-family: Arial; font-size: 8.5pt; }
+  .g12-taxa1    { position: absolute; left: 10.25cm; top: 27cm; font-family: Arial; font-size: 5pt; }
+  .g12-taxa2    { position: absolute; left: 11.54cm; top: 27cm; font-family: Arial; font-size: 5pt; }
 
-/* ===== Garantia +24 meses ===== */
-.g24-numero   { position: absolute; left: 248.7px; top: 1047.8px; font-family: Arial; font-size: 8.5pt; }
-.g24-parcela  { position: absolute; left: 311.9px; top: 1047.8px; font-family: Arial; font-size: 8.5pt; }
-.g24-total    { position: absolute; left: 311.9px; top: 1059.8px; font-family: Arial; font-size: 8.5pt; }
-.g24-cheio    { position: absolute; left: 411.6px; top: 1047.8px; font-family: Arial; font-size: 8.5pt; }
-.g24-taxa1    { position: absolute; left: 386.6px; top: 1064.8px; font-family: Arial; font-size: 5pt; }
-.g24-taxa2    { position: absolute; left: 435.8px; top: 1064.8px; font-family: Arial; font-size: 5pt; }
+  /* Garantia +24 meses */
+  .g24-numero   { position: absolute; left: 6.57cm; top: 27.7cm; font-family: Arial; font-size: 8.5pt; }
+  .g24-parcela  { position: absolute; left: 8.25cm; top: 27.7cm; font-family: Arial; font-size: 8.5pt; }
+  .g24-total    { position: absolute; left: 8.25cm; top: 28.1cm; font-family: Arial; font-size: 8.5pt; }
+  .g24-cheio    { position: absolute; left: 10.9cm; top: 27.7cm; font-family: Arial; font-size: 8.5pt; }
+  .g24-taxa1    { position: absolute; left: 10.25cm; top: 28.18cm; font-family: Arial; font-size: 5pt; }
+  .g24-taxa2    { position: absolute; left: 11.54cm; top: 28.18cm; font-family: Arial; font-size: 5pt; }
 
-/* ===== Garantia +36 meses ===== */
-.g36-numero   { position: absolute; left: 519.7px; top: 1025.4px; font-family: Arial; font-size: 8.5pt; }
-.g36-parcela  { position: absolute; left: 581.6px; top: 1025.4px; font-family: Arial; font-size: 8.5pt; }
-.g36-total    { position: absolute; left: 581.6px; top: 1034.3px; font-family: Arial; font-size: 8.5pt; }
-.g36-cheio    { position: absolute; left: 680.3px; top: 1025.4px; font-family: Arial; font-size: 8.5pt; }
-.g36-taxa1    { position: absolute; left: 661.2px; top: 1038.7px; font-family: Arial; font-size: 5pt; }
-.g36-taxa2    { position: absolute; left: 706.8px; top: 1038.7px; font-family: Arial; font-size: 5pt; }
+  /* Garantia +36 meses */
+  .g36-numero   { position: absolute; left: 13.75cm; top: 27.01cm; font-family: Arial; font-size: 8.5pt; }
+  .g36-parcela  { position: absolute; left: 15.4cm; top: 27.01cm; font-family: Arial; font-size: 8.5pt; }
+  .g36-total    { position: absolute; left: 15.4cm; top: 27.4cm; font-family: Arial; font-size: 8.5pt; }
+  .g36-cheio    { position: absolute; left: 18cm; top: 27.01cm; font-family: Arial; font-size: 8.5pt; }
+  .g36-taxa1    { position: absolute; left: 17.5cm; top: 27.5cm; font-family: Arial; font-size: 5pt; }
+  .g36-taxa2    { position: absolute; left: 18.7cm; top: 27.5cm; font-family: Arial; font-size: 5pt; }
+
+}
 
 
 
