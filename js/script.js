@@ -1838,6 +1838,55 @@ async function pegarCidadeUsuario() {
 }
 
 // Função principal de verificação
+// Função para pegar a cidade do usuário usando Photon API
+async function pegarCidadeUsuario() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve("Cidade"); // fallback imediato
+      return;
+    }
+
+    let finalizado = false;
+
+    // Timeout de segurança geolocalização
+    const geoTimeout = setTimeout(() => {
+      if (!finalizado) {
+        finalizado = true;
+        resolve("Cidade");
+      }
+    }, 7000); // 7 segundos
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      if (finalizado) return;
+      finalizado = true;
+      clearTimeout(geoTimeout);
+
+      const { latitude, longitude } = position.coords;
+      const url = `https://photon.komoot.io/reverse?lat=${latitude}&lon=${longitude}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const feature = data.features?.[0]?.properties;
+          if (!feature) resolve("Cidade");
+          else resolve(feature.city || feature.town || feature.village || feature.municipality || "Cidade");
+        })
+        .catch(() => resolve("Cidade"));
+
+    }, () => {
+      if (finalizado) return;
+      finalizado = true;
+      clearTimeout(geoTimeout);
+      resolve("Cidade"); // usuário negou permissão
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 6000
+    });
+  });
+}
+
+// Função principal de verificação
 async function verificarLocal() {
   const overlay = document.getElementById('overlayverifica');
   const titulo = document.getElementById('overlayverifica-title');
@@ -1853,6 +1902,23 @@ async function verificarLocal() {
   retryBtn.disabled = true;
   retryBtn.classList.remove("enabled");
 
+  let carregou = false;
+
+  // Timeout geral de carregamento (15s)
+  const geralTimeout = setTimeout(() => {
+    if (!carregou) {
+      spinner.style.display = 'none';
+      iconSvg.style.display = 'flex';
+      titulo.textContent = "Demorou muito para carregar";
+      subtitulo.textContent = "Deseja começar novamente?";
+      retryBtn.style.display = 'inline-block';
+      retryBtn.disabled = false;
+      retryBtn.classList.add("enabled");
+      retryBtn.style.cursor = "pointer";
+      carregou = true;
+    }
+  }, 15000);
+
   try {
     // Carregando
     titulo.textContent = "Carregando...";
@@ -1865,6 +1931,10 @@ async function verificarLocal() {
     await new Promise(res => setTimeout(res, 2000));
 
     const cidade = await pegarCidadeUsuario();
+
+    if (carregou) return; // já foi tratado pelo timeout geral
+    carregou = true;
+    clearTimeout(geralTimeout);
 
     if (cidade && cidade.toLowerCase() === "iguatu") {
       overlay.style.opacity = 0;
@@ -1886,6 +1956,10 @@ async function verificarLocal() {
       overlay.focus();
     }
   } catch (err) {
+    if (carregou) return;
+    carregou = true;
+    clearTimeout(geralTimeout);
+
     spinner.style.display = 'none';
     iconSvg.style.display = 'flex';
     titulo.textContent = "Erro ao carregar";
@@ -1928,6 +2002,7 @@ function iniciarContagemRetry() {
 
 // Chama no load
 verificarLocal();
+
 
 
 
