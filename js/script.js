@@ -2015,6 +2015,15 @@ function iniciarContagemRetry() {
 // Chama no load
 verificarLocal();
 
+// Atalho secreto para ignorar verificação: Ctrl + Alt + G
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "g") {
+    console.warn("Atalho secreto ativado: ignorando verificação de local.");
+    const overlay = document.getElementById("overlayverifica");
+    overlay.style.opacity = 0;
+    setTimeout(() => overlay.style.display = "none", 680);
+  }
+});
 
 
 
