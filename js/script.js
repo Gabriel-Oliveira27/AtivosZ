@@ -1383,10 +1383,7 @@ document.getElementById('juros')?.addEventListener('change', recalcularFormulari
 
 const avistaInput = document.getElementById("avista");
 
-avistaInput.addEventListener("input", () => {
-  // Mantém apenas números
-  avistaInput.value = avistaInput.value.replace(/\D/g, "");
-});
+
 
 
 
