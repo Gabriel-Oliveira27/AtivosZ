@@ -1777,6 +1777,101 @@ async function carregarVendedores() {
 carregarVendedores();
 
 
+async function verificarLocal() {
+  const overlay = document.getElementById('overlayverifica');
+  const titulo = document.getElementById('overlayverifica-title');
+  const subtitulo = document.getElementById('overlayverifica-subtitle');
+  const spinner = document.querySelector('.spinnerverifica');
+  const iconSvg = document.getElementById('icon-alerta-svg');
+  const retryBtn = document.getElementById('retryBtn');
+
+  // Reset inicial
+  spinner.style.display = 'block';
+  iconSvg.style.display = 'none';
+  retryBtn.style.display = 'none';
+  retryBtn.disabled = true;
+  retryBtn.classList.remove("enabled");
+
+  try {
+    // Carregando
+    titulo.textContent = "Carregando...";
+    subtitulo.textContent = "";
+    await new Promise(res => setTimeout(res, 2000));
+
+    // Abrindo sistema
+    titulo.textContent = "Abrindo o sistema...";
+    subtitulo.textContent = "";
+    await new Promise(res => setTimeout(res, 2000));
+
+    const cidade = await pegarCidadeUsuario();
+
+    if (cidade && cidade.toLowerCase() === "iguatu") {
+      overlay.style.opacity = 0;
+      setTimeout(() => overlay.style.display = 'none', 680);
+    } else {
+      spinner.style.display = 'none';
+      iconSvg.style.display = 'flex';
+
+      if (!cidade || cidade.toLowerCase() === "cidade") {
+        titulo.textContent = "Erro ao carregar";
+        subtitulo.textContent = "Verifique se o local está ativado e autorizado.";
+
+        // Ativar botão "Tentar novamente" com contagem regressiva
+        iniciarContagemRetry();
+      } else {
+        titulo.textContent = "Sistema indisponível para sua região";
+        subtitulo.textContent = "Não foi possível carregar.";
+      }
+
+      overlay.setAttribute('tabindex', '-1');
+      overlay.focus();
+    }
+  } catch (err) {
+    spinner.style.display = 'none';
+    iconSvg.style.display = 'flex';
+    titulo.textContent = "Erro ao carregar";
+    subtitulo.textContent = "Verifique se o local está ativado e autorizado.";
+    iniciarContagemRetry();
+    console.error(err);
+    overlay.setAttribute('tabindex', '-1');
+    overlay.focus();
+  }
+}
+
+// Função para gerenciar a contagem regressiva do botão
+function iniciarContagemRetry() {
+  const retryBtn = document.getElementById('retryBtn');
+  let tempo = 5;
+  retryBtn.style.display = 'inline-block';
+  retryBtn.textContent = `Tentar novamente em (${tempo})`;
+  retryBtn.disabled = true;
+  retryBtn.classList.remove("enabled");
+
+  const intervalo = setInterval(() => {
+    tempo--;
+    if (tempo > 0) {
+      retryBtn.textContent = `Tentar novamente em (${tempo})`;
+    } else {
+      clearInterval(intervalo);
+      retryBtn.textContent = "Tentar novamente";
+      retryBtn.disabled = false;
+      retryBtn.classList.add("enabled");
+      retryBtn.style.cursor = "pointer";
+    }
+  }, 1000);
+
+  // Clique reinicia processo
+  retryBtn.onclick = () => {
+    if (!retryBtn.disabled) {
+      verificarLocal();
+    }
+  };
+}
+
+// Chama no load
+verificarLocal();
+
+
 async function pegarCidadeUsuario() {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
