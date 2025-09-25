@@ -1784,6 +1784,13 @@ async function carregarVendedores() {
 
 carregarVendedores();
 
+fetch("https://photon.komoot.io/reverse?lat=-6.374&lon=-39.324")
+  .then(r => r.json())
+  .then(data => console.log("Resposta API:", data))
+  .catch(err => console.error("Erro API:", err));
+
+console.log("Contexto seguro?", window.isSecureContext);
+
 // Função atualizada para pegar cidade do usuário
 async function pegarCidadeUsuario() {
   return new Promise((resolve) => {
@@ -1855,6 +1862,11 @@ async function pegarCidadeUsuario() {
         resolve("Cidade");
       }
     }, 7000); // 7 segundos
+
+     navigator.geolocation.getCurrentPosition(
+  pos => console.log("Callback disparado! Pos:", pos),
+  err => console.error("Erro geolocalização:", err)
+);
 
     navigator.geolocation.getCurrentPosition((position) => {
       if (finalizado) return;
