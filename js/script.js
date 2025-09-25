@@ -73,19 +73,33 @@ selectJuros.addEventListener("change", () => {
   }
 
   // habilita/desabilita o campo "parcela" conforme método
-  function updateMetodo() {
-    const metodo = document.getElementById("metodo").value;
-    const parcelaInputEl = document.getElementById("parcela");
+function updateMetodo() {
+  const metodo = document.getElementById("metodo").value;
+  const parcelaInputEl = document.getElementById("parcela");
+  const jurosSelect = document.getElementById("juros");
 
-    if (metodo === "R$" || metodo === "5x") {
-      parcelaInputEl.disabled = true;
-      parcelaInputEl.required = false;
-      parcelaInputEl.value = "";
-    } else {
-      parcelaInputEl.disabled = false;
-      parcelaInputEl.required = true; // 10x/12x exigem parcela
+  // Bloquear ou liberar campo de parcela
+  if (metodo === "R$" || metodo === "5x" || metodo === "3x") {
+    parcelaInputEl.disabled = true;
+    parcelaInputEl.required = false;
+    parcelaInputEl.value = "";
+  } else {
+    parcelaInputEl.disabled = false;
+    parcelaInputEl.required = true;
+  }
+
+
+  if (metodo === "3x" || metodo === "5x" || metodo === "R$" || metodo === "10x") {
+    if (jurosSelect) {
+      jurosSelect.disabled = true;
+      try { jurosSelect.selectedIndex = 0; } catch(e) { /* ignora */ }
+    }
+  } else {
+    if (jurosSelect) {
+      jurosSelect.disabled = false;
     }
   }
+}
 
   // mostra/esconde campos extras conforme juros
   function updateExtras() {
@@ -148,11 +162,7 @@ function adicionarProduto() {
     mostrarAvisoComBarra("Insira código, descrição e marca válidos!", 5000);
     return;
   }
-  if (metodo === "selecione-pag" || tipo === "selecione-taxa") {
-    mostrarAvisoComBarra("Selecione uma opção válida!", 5000, "#f44336", "#b71c1c");
-    return;
-  }
-  if ((metodo === "10x" || metodo === "12x") && parcelaInput <= 0) {
+if ((metodo === "10x" || metodo === "12x") && parcelaInput <= 0) {
     mostrarAvisoComBarra("Informe o valor da parcela!", 5000, "#f44336", "#b71c1c");
     document.getElementById("parcela").focus();
     return;
@@ -162,6 +172,7 @@ function adicionarProduto() {
     document.getElementById("avista").focus();
     return;
   }
+
 
   const garantiasPresentes = g12 > 0 || g24 > 0 || g36 > 0;
 
