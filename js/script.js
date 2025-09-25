@@ -1784,7 +1784,60 @@ async function carregarVendedores() {
 
 carregarVendedores();
 
+// Função atualizada para pegar cidade do usuário
+async function pegarCidadeUsuario() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve("Cidade"); // fallback imediato
+      return;
+    }
 
+    let finalizado = false;
+
+    // Timeout de segurança (8s)
+    const timeoutId = setTimeout(() => {
+      if (!finalizado) {
+        finalizado = true;
+        resolve("Cidade");
+      }
+    }, 8000);
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      if (finalizado) return;
+      finalizado = true;
+      clearTimeout(timeoutId);
+
+      try {
+        const { latitude, longitude } = position.coords;
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const addr = data?.address;
+
+        // Checa todas as possíveis propriedades
+        if (addr?.city) resolve(addr.city);
+        else if (addr?.town) resolve(addr.town);
+        else if (addr?.village) resolve(addr.village);
+        else if (addr?.municipality) resolve(addr.municipality);
+        else resolve("Cidade");
+
+      } catch {
+        resolve("Cidade");
+      }
+    }, (err) => {
+      if (finalizado) return;
+      finalizado = true;
+      clearTimeout(timeoutId);
+      resolve("Cidade"); // qualquer erro ou permissão negada
+    }, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 7000
+    });
+  });
+}
+
+// Função principal de verificação
 async function verificarLocal() {
   const overlay = document.getElementById('overlayverifica');
   const titulo = document.getElementById('overlayverifica-title');
@@ -1823,8 +1876,6 @@ async function verificarLocal() {
       if (!cidade || cidade.toLowerCase() === "cidade") {
         titulo.textContent = "Erro ao carregar";
         subtitulo.textContent = "Verifique se o local está ativado e autorizado.";
-
-        // Ativar botão "Tentar novamente" com contagem regressiva
         iniciarContagemRetry();
       } else {
         titulo.textContent = "Sistema indisponível para sua região";
@@ -1846,7 +1897,7 @@ async function verificarLocal() {
   }
 }
 
-// Função para gerenciar a contagem regressiva do botão
+// Contagem regressiva do botão retry
 function iniciarContagemRetry() {
   const retryBtn = document.getElementById('retryBtn');
   let tempo = 5;
@@ -1868,7 +1919,6 @@ function iniciarContagemRetry() {
     }
   }, 1000);
 
-  // Clique reinicia processo
   retryBtn.onclick = () => {
     if (!retryBtn.disabled) {
       verificarLocal();
@@ -1878,6 +1928,7 @@ function iniciarContagemRetry() {
 
 // Chama no load
 verificarLocal();
+
 
 
 async function pegarCidadeUsuario() {
