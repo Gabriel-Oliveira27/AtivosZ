@@ -19,6 +19,29 @@
 </head>
 <body>
 
+
+  <div id="overlayverifica" role="dialog" aria-modal="true" aria-labelledby="overlayverifica-title" aria-describedby="overlayverifica-subtitle">
+  <div class="spinnerverifica" aria-hidden="true"></div>
+
+  <!-- SVG de alerta profissional (inicialmente escondido) -->
+  <div id="icon-alerta-svg" class="icon-alerta-svg" role="img" aria-label="Alerta" style="display:none;">
+    <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" fill="#fff" stroke="#e63946" stroke-width="4"></circle>
+      <rect x="30" y="18" width="4" height="22" fill="#e63946"></rect>
+      <circle cx="32" cy="46" r="3" fill="#e63946"></circle>
+    </svg>
+  </div>
+
+  <h2 id="overlayverifica-title">Carregando...</h2>
+  <h5 id="overlayverifica-subtitle"></h5>
+
+  <!-- Botão tentar novamente (aparece só no erro de permissão) -->
+  <button id="retryBtn" class="retry-btn" disabled style="display:none;">
+    Tentar novamente
+  </button>
+</div>
+
+
 <div id="overlay">
   <div class="overlay-box">
     <div class="spinner"></div>
@@ -606,6 +629,7 @@
       <select id="metodo">
         <option value="selecione-pag">Selecione um método de pagamento</option>
         <option value="R$">À vista (R$)</option>
+        <option value="3x">3x</option>
         <option value="5x">5x</option>
         <option value="10x">10x</option>
         <option value="12x">12x</option>
