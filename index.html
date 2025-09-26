@@ -41,6 +41,34 @@
   </button>
 </div>
 
+  <div id="debugAdmBackdrop" style="display:none;">
+  <div id="debugAdm" class="debug-adm" aria-hidden="true">
+    <h2>Debug Adm</h2>
+    <p>Área restrita — suporte/administrador</p>
+
+    <div class="debug-row">
+      <input id="debugUser" type="text" placeholder="Usuário" autocomplete="username"
+             autocapitalize="none" autocorrect="off" spellcheck="false" />
+      <input id="debugPass" type="password" placeholder="Senha" autocomplete="current-password"
+             autocapitalize="none" autocorrect="off" spellcheck="false" />
+    </div>
+
+    <div style="display:flex;gap:10px;align-items:center;justify-content:center;">
+      <button id="debugBtn" class="retry-btn">Liberar</button>
+      <div id="debugSpinner" class="mini-spinner" style="display:none;" aria-hidden="true"></div>
+    </div>
+
+    <p id="debugMsg" class="msg" style="min-height:1.2em;"></p>
+  </div>
+</div>
+
+<div id="loadingOverlay">
+  <div>
+    <p>Autorizado!</p>
+    <span>Pulando etapa de validação...</span>
+  </div>
+</div>
+
 
 <div id="overlay">
   <div class="overlay-box">
