@@ -4,14 +4,16 @@
     "CPF": "025.157.183-10",
     "User": "gabrieloliveira",
     "Senha": "loja02",
-    "Permissao": "admin"
+    "Permissao": "admin",
+    "local": "qualquer"
   },
   {
     "Nome": "Thiago Alves Andrade",
     "CPF": "075.369.613-40",
     "User": "th",
     "Senha": "zenir02",
-    "Permissao": "fat"
+    "Permissao": "fat",
+    "local": "iguatu"
   },
 
   {
@@ -19,7 +21,8 @@
     "CPF": "987.654.321-00",
     "User": "drika",
     "Senha": "drika1981",
-    "Permissao": "admin"
+    "Permissao": "admin",
+    "local": "qualquer"
   },
 
   {
@@ -27,7 +30,8 @@
     "CPF": "987.654.321-00",
     "User": "juliagabriely",
     "Senha": "julia1802",
-    "Permissao": "suporte"
+    "Permissao": "suporte",
+    "local": "qualquer"
   },
 
   {
@@ -36,7 +40,8 @@
     "User": "fernando",
     "Senha": "zenir02",
     "Permissao": "vendedor",
-    "assinatura": "assfernando.png"
+    "assinatura": "assfernando.png",
+    "local": "iguatu"
   },
 
   {
@@ -45,6 +50,23 @@
     "User": "ismael",
     "Senha": "0",
     "Permissao": "vendedor",
-    "assinatura": "assismael.png"
+    "assinatura": "assismael.png",
+    "local": "iguatu"
+  },
+  {
+    "Nome": "Vitória Rodrigues de Figueiredo",
+    "CPF": "078.716.633-21",
+    "User": "vitoriarodrigues",
+    "Senha": "zenir28",
+    "Permissao": "ger",
+    "local": "iguatu"
+  },
+  {
+    "Nome": "Maria Honorinda Lopes",
+    "CPF": "043.060.853-50",
+    "User": "maria",
+    "Senha": "zenirloja02",
+    "Permissao": "ger",
+    "local": "iguatu"
   }
 ]
