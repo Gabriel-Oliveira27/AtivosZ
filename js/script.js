@@ -2016,14 +2016,221 @@ function iniciarContagemRetry() {
 verificarLocal();
 
 // Atalho secreto para ignorar verificação: Ctrl + Alt + G
-document.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === "g") {
-    console.warn("Atalho secreto ativado: ignorando verificação de local.");
-    const overlay = document.getElementById("overlayverifica");
-    overlay.style.opacity = 0;
-    setTimeout(() => overlay.style.display = "none", 680);
+const DEBUG_USERS_JSON = 'Data/usuarios.json';
+let debugAttempts = 0;
+let debugLockedUntil = 0;
+
+// Atalho Ctrl + Alt + G
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'g') {
+    openDebugModal();
   }
 });
+
+// Abre modal debug
+function openDebugModal() {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  const modal = document.getElementById('debugAdm');
+  if (!backdrop || !modal) return;
+  backdrop.style.display = 'flex';
+  modal.setAttribute('aria-hidden', 'false');
+
+  const user = document.getElementById('debugUser');
+  setTimeout(() => {
+    user && user.focus();
+    user && user.addEventListener('input', forceLowercaseHandler);
+  }, 60);
+}
+
+// Fecha modal debug
+function closeDebugModal() {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  const modal = document.getElementById('debugAdm');
+  if (!backdrop || !modal) return;
+  backdrop.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const user = document.getElementById('debugUser');
+  const pass = document.getElementById('debugPass');
+  const msg = document.getElementById('debugMsg');
+  if (user) { user.value = ''; user.removeEventListener('input', forceLowercaseHandler); }
+  if (pass) pass.value = '';
+  if (msg) msg.textContent = '';
+}
+
+// Força lowercase
+function forceLowercaseHandler(e) {
+  const el = e.target;
+  const pos = el.selectionStart;
+  el.value = el.value.toLowerCase();
+  try { el.setSelectionRange(pos, pos); } catch (err) {}
+}
+
+// fetch com timeout
+function fetchWithTimeout(url, opts = {}, timeout = 6000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const signal = controller.signal;
+  return fetch(url, {...opts, signal}).finally(() => clearTimeout(id));
+}
+
+// valida credenciais e adiciona visitante
+async function validateDebugCredentials(usernameRaw, password) {
+  const now = Date.now();
+  if (debugLockedUntil && now < debugLockedUntil) {
+    return { ok: false, reason: 'locked', wait: Math.ceil((debugLockedUntil - now)/1000) };
+  }
+
+  const username = (usernameRaw || '').trim().toLowerCase();
+
+  try {
+    const resp = await fetchWithTimeout(DEBUG_USERS_JSON, {}, 6000);
+    if (!resp.ok) return { ok: false, reason: 'fetch-error' };
+    const users = await resp.json();
+
+    const found = users.find(u =>
+      (u.User || '').toLowerCase() === username &&
+      String(u.Senha || '') === String(password)
+    );
+
+    if (!found) {
+      debugAttempts++;
+      if (debugAttempts >= 3) {
+        debugLockedUntil = Date.now() + 30000; // 30s
+        return { ok: false, reason: 'locked', wait: 30 };
+      }
+      return { ok: false, reason: 'invalid' };
+    }
+
+    const perm = (found.Permissao || '').toLowerCase();
+    debugAttempts = 0;
+
+    // --- VISITANTE ---
+    if (perm === 'visitante') {
+      const key = localStorage.getItem('visitanteKey');
+      if (key) {
+        const parsed = JSON.parse(key);
+        const elapsed = Date.now() - parsed.start;
+        if (elapsed > 5 * 60 * 1000) {
+          localStorage.removeItem('visitanteKey');
+          return { ok: false, reason: 'expired' };
+        } else {
+          return { ok: true, user: found, type: 'visitante' };
+        }
+      } else {
+        const fakeIP = `${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+        localStorage.setItem('visitanteKey', JSON.stringify({ ip: fakeIP, start: Date.now() }));
+        return { ok: true, user: found, type: 'visitante' };
+      }
+    }
+
+    // --- ADMIN / SUPORTE ---
+    if (perm === 'admin' || perm === 'suporte') {
+      return { ok: true, user: found, type: perm };
+    }
+
+    return { ok: false, reason: 'forbidden' };
+
+  } catch (err) {
+    console.error('Erro validateDebugCredentials:', err);
+    return { ok: false, reason: 'network' };
+  }
+}
+
+// Handler botão debug
+document.getElementById('debugBtn').addEventListener('click', async () => {
+  const userEl = document.getElementById('debugUser');
+  const passEl = document.getElementById('debugPass');
+  const msgEl = document.getElementById('debugMsg');
+  const spinner = document.getElementById('debugSpinner');
+  const btn = document.getElementById('debugBtn');
+  const overlay = document.getElementById('overlayverifica');
+
+  const username = (userEl.value || '').trim();
+  const password = passEl.value || '';
+
+  msgEl.textContent = '';
+  if (!username || !password) {
+    msgEl.textContent = 'Preencha usuário e senha.';
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+
+  const result = await validateDebugCredentials(username, password);
+
+  spinner.style.display = 'none';
+  btn.disabled = false;
+
+  if (result.ok) {
+    msgEl.style.color = 'green';
+    msgEl.textContent = 'Acesso liberado. Abrindo sistema...';
+
+    // Tela de carregamento
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'flex';
+    setTimeout(() => {
+      loadingOverlay.style.display = 'none';
+      overlay.style.opacity = 0;
+      setTimeout(() => overlay.style.display = 'none', 600);
+      closeDebugModal();
+    }, 2500);
+
+    // Visitante → 5 min sessão
+    if (result.type === 'visitante') {
+      sessionStorage.setItem('visitanteAtivo', Date.now());
+      setTimeout(() => {
+        sessionStorage.removeItem('visitanteAtivo');
+        alert('Sessão do visitante expirada. Acesso bloqueado!');
+        location.reload();
+      }, 5*60*1000);
+    }
+
+  } else {
+    msgEl.style.color = '#c0392b';
+    if (result.reason === 'locked') {
+      msgEl.textContent = `Bloqueado. Tente novamente em ${result.wait}s.`;
+    } else if (result.reason === 'invalid') {
+      msgEl.textContent = 'Usuário ou senha inválidos.';
+    } else if (result.reason === 'forbidden') {
+      msgEl.textContent = 'Acesso negado — permissão insuficiente.';
+    } else if (result.reason === 'expired') {
+      msgEl.textContent = 'Sessão do visitante expirou. Recomece.';
+    } else if (result.reason === 'fetch-error') {
+      msgEl.textContent = 'Erro ao carregar dados (fetch).';
+    } else {
+      msgEl.textContent = 'Erro de rede. Tente novamente.';
+    }
+  }
+});
+
+// Enter submete, Esc fecha
+document.addEventListener('keydown', (e) => {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  if (!backdrop || backdrop.style.display !== 'flex') return;
+
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const btn = document.getElementById('debugBtn');
+    if (btn && !btn.disabled) btn.click();
+  } else if (e.key === 'Escape') {
+    closeDebugModal();
+  }
+});
+
+// Bloqueio visitante expirado
+const visitanteAtivo = sessionStorage.getItem('visitanteAtivo');
+if (visitanteAtivo) {
+  const tempoPassado = Date.now() - visitanteAtivo;
+  if (tempoPassado > 5 * 60 * 1000) {
+    sessionStorage.removeItem('visitanteAtivo');
+    alert("Sessão do visitante já expirou!");
+    location.reload();
+  }
+}
+
+
 
 
 
