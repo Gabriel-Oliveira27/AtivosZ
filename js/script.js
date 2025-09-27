@@ -2016,223 +2016,224 @@ function iniciarContagemRetry() {
 verificarLocal();
 
 // Atalho secreto para ignorar verificação: Ctrl + Alt + G
-  const API_URL_POST = 'https://script.google.com/macros/s/AKfycbyrApy69TU35h4CVaY_kDrTfYY77T31t4aonyGSEq4O8cSDwI_ucAHfij6YW2Ix8sty/exec'; 
-  let debugAttempts = 0;
-  let debugLockedUntil = 0;
+ const API_URL_POST = 'https://script.google.com/macros/s/AKfycbyaWjaNWxdhNMzip5dmRx9QWiBfYeMz5Y6AwgfRwtiMZIVEusgjTZxoLkPJFGX_AC6k/exec';
+let debugAttempts = 0;
+let debugLockedUntil = 0;
 
-  // Atalho Ctrl+Alt+G
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'g') openDebugModal();
-  });
+// Atalho Ctrl+Alt+G
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'g') openDebugModal();
+});
 
-  // Abre modal debug
-  function openDebugModal() {
-    const backdrop = document.getElementById('debugAdmBackdrop');
-    const modal = document.getElementById('debugAdm');
-    if (!backdrop || !modal) return;
-    backdrop.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
+// Abre modal debug
+function openDebugModal() {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  const modal = document.getElementById('debugAdm');
+  if (!backdrop || !modal) return;
+  backdrop.style.display = 'flex';
+  modal.setAttribute('aria-hidden', 'false');
 
-    const user = document.getElementById('debugUser');
-    setTimeout(() => {
-      user && user.focus();
-      user && user.addEventListener('input', forceLowercaseHandler);
-    }, 60);
+  const user = document.getElementById('debugUser');
+  setTimeout(() => {
+    user && user.focus();
+    user && user.addEventListener('input', forceLowercaseHandler);
+  }, 60);
+}
+
+// Fecha modal debug
+function closeDebugModal() {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  const modal = document.getElementById('debugAdm');
+  if (!backdrop || !modal) return;
+  backdrop.style.display = 'none';
+  modal.setAttribute('aria-hidden', 'true');
+
+  const user = document.getElementById('debugUser');
+  const pass = document.getElementById('debugPass');
+  const msg = document.getElementById('debugMsg');
+  if (user) { user.value = ''; user.removeEventListener('input', forceLowercaseHandler); }
+  if (pass) pass.value = '';
+  if (msg) msg.textContent = '';
+}
+
+// Força lowercase
+function forceLowercaseHandler(e) {
+  const el = e.target;
+  const pos = el.selectionStart;
+  el.value = el.value.toLowerCase();
+  try { el.setSelectionRange(pos, pos); } catch (err) {}
+}
+
+// fetch com timeout
+function fetchWithTimeout(url, opts = {}, timeout = 6000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const signal = controller.signal;
+  return fetch(url, {...opts, signal}).finally(() => clearTimeout(id));
+}
+
+// Validação via API
+async function validateDebugCredentials(usernameRaw, password) {
+  const now = Date.now();
+  if (debugLockedUntil && now < debugLockedUntil) {
+    return { ok: false, reason: 'locked', wait: Math.ceil((debugLockedUntil - now)/1000) };
   }
 
-  // Fecha modal debug
-  function closeDebugModal() {
-    const backdrop = document.getElementById('debugAdmBackdrop');
-    const modal = document.getElementById('debugAdm');
-    if (!backdrop || !modal) return;
-    backdrop.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
+  const username = (usernameRaw || '').trim().toLowerCase();
 
-    const user = document.getElementById('debugUser');
-    const pass = document.getElementById('debugPass');
-    const msg = document.getElementById('debugMsg');
-    if (user) { user.value = ''; user.removeEventListener('input', forceLowercaseHandler); }
-    if (pass) pass.value = '';
-    if (msg) msg.textContent = '';
-  }
+  try {
+    const resp = await fetchWithTimeout(API_URL_POST, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', user: username, pass: password, local: 'localTeste' })
+    });
 
-  // Força lowercase
-  function forceLowercaseHandler(e) {
-    const el = e.target;
-    const pos = el.selectionStart;
-    el.value = el.value.toLowerCase();
-    try { el.setSelectionRange(pos, pos); } catch (err) {}
-  }
+    if (!resp.ok) return { ok: false, reason: 'fetch-error' };
+    const data = await resp.json();
 
-  // fetch com timeout
-  function fetchWithTimeout(url, opts = {}, timeout = 6000) {
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
-    const signal = controller.signal;
-    return fetch(url, {...opts, signal}).finally(() => clearTimeout(id));
-  }
-
-  // Validação via API
-  async function validateDebugCredentials(usernameRaw, password) {
-    const now = Date.now();
-    if (debugLockedUntil && now < debugLockedUntil) {
-      return { ok: false, reason: 'locked', wait: Math.ceil((debugLockedUntil - now)/1000) };
+    if (!data.ok) {
+      debugAttempts++;
+      if (debugAttempts >= 3) {
+        debugLockedUntil = Date.now() + 30000; // bloqueia 30s
+        return { ok: false, reason: 'locked', wait: 30 };
+      }
+      return { ok: false, reason: data.error || 'invalid' };
     }
 
-    const username = (usernameRaw || '').trim().toLowerCase();
+    debugAttempts = 0;
+    const perm = (data.perm || '').toLowerCase();
 
-    try {
-      const resp = await fetchWithTimeout(API_URL_POST, {
+    // --- VISITANTE ---
+    if (perm === 'visitante') {
+      // Consumir voucher
+      const voucherResp = await fetchWithTimeout(API_URL_POST, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'login', user: username, pass: password, local: 'localTeste' })
+        body: JSON.stringify({ action: 'voucher', user: username, pass: password, local: 'localTeste' })
       });
 
-      if (!resp.ok) return { ok: false, reason: 'fetch-error' };
-      const data = await resp.json();
+      if (!voucherResp.ok) return { ok: false, reason: 'voucher-fetch-error' };
+      const voucherData = await voucherResp.json();
+      if (!voucherData.ok) return { ok: false, reason: voucherData.error || 'voucher-invalid' };
 
-      if (!data.ok) {
-        debugAttempts++;
-        if (debugAttempts >= 3) {
-          debugLockedUntil = Date.now() + 30000; // bloqueia 30s
-          return { ok: false, reason: 'locked', wait: 30 };
-        }
-        return { ok: false, reason: data.error || 'invalid' };
-      }
-
-      debugAttempts = 0;
-      const perm = (data.perm || '').toLowerCase();
-
-      // --- VISITANTE ---
-      if (perm === 'visitante') {
-        const key = localStorage.getItem('visitanteKey');
-        if (key) {
-          const parsed = JSON.parse(key);
-          const elapsed = Date.now() - parsed.start;
-          if (elapsed > 5*60*1000) {
-            localStorage.removeItem('visitanteKey');
-            return { ok: false, reason: 'expired' };
-          }
-          return { ok: true, user: data, type: 'visitante' };
-        } else {
-          localStorage.setItem('visitanteKey', JSON.stringify({ start: Date.now() }));
-          return { ok: true, user: data, type: 'visitante' };
-        }
-      }
-
-      // --- VENDEDOR ---
-      if (perm === 'vendedor') return { ok: true, user: data, type: 'vendedor', start: Date.now() };
-
-      // --- ADMIN / SUPORTE / GER ---
-      if (['admin','suporte','ger'].includes(perm)) return { ok: true, user: data, type: perm };
-
-      return { ok: false, reason: 'forbidden' };
-
-    } catch (err) {
-      console.error('Erro validateDebugCredentials:', err);
-      return { ok: false, reason: 'network' };
+      // Controla sessão visitante
+      localStorage.setItem('visitanteKey', JSON.stringify({ start: Date.now() }));
+      return { ok: true, user: voucherData, type: 'visitante' };
     }
+
+    // --- VENDEDOR ---
+    if (perm === 'vendedor') return { ok: true, user: data, type: 'vendedor', start: Date.now() };
+
+    // --- ADMIN / SUPORTE / GER ---
+    if (['admin','suporte','ger'].includes(perm)) return { ok: true, user: data, type: perm };
+
+    return { ok: false, reason: 'forbidden' };
+
+  } catch (err) {
+    console.error('Erro validateDebugCredentials:', err);
+    return { ok: false, reason: 'network' };
+  }
+}
+
+// Handler botão debug
+document.getElementById('debugBtn').addEventListener('click', async () => {
+  const userEl = document.getElementById('debugUser');
+  const passEl = document.getElementById('debugPass');
+  const msgEl = document.getElementById('debugMsg');
+  const spinner = document.getElementById('debugSpinner');
+  const btn = document.getElementById('debugBtn');
+  const overlay = document.getElementById('overlayverifica');
+
+  const username = (userEl.value || '').trim();
+  const password = passEl.value || '';
+  msgEl.textContent = '';
+  if (!username || !password) {
+    msgEl.textContent = 'Preencha usuário e senha.';
+    return;
   }
 
-  // Handler botão debug
-  document.getElementById('debugBtn').addEventListener('click', async () => {
-    const userEl = document.getElementById('debugUser');
-    const passEl = document.getElementById('debugPass');
-    const msgEl = document.getElementById('debugMsg');
-    const spinner = document.getElementById('debugSpinner');
-    const btn = document.getElementById('debugBtn');
-    const overlay = document.getElementById('overlayverifica');
+  btn.disabled = true;
+  spinner.style.display = 'block';
 
-    const username = (userEl.value || '').trim();
-    const password = passEl.value || '';
-    msgEl.textContent = '';
-    if (!username || !password) {
-      msgEl.textContent = 'Preencha usuário e senha.';
-      return;
-    }
+  const result = await validateDebugCredentials(username, password);
 
-    btn.disabled = true;
-    spinner.style.display = 'block';
+  spinner.style.display = 'none';
+  btn.disabled = false;
 
-    const result = await validateDebugCredentials(username, password);
+  if (result.ok) {
+    msgEl.style.color = 'green';
+    msgEl.textContent = 'Acesso liberado. Abrindo sistema...';
 
-    spinner.style.display = 'none';
-    btn.disabled = false;
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'flex';
+    setTimeout(() => {
+      loadingOverlay.style.display = 'none';
+      overlay.style.opacity = 0;
+      setTimeout(() => overlay.style.display = 'none', 600);
+      closeDebugModal();
+    }, 2500);
 
-    if (result.ok) {
-      msgEl.style.color = 'green';
-      msgEl.textContent = 'Acesso liberado. Abrindo sistema...';
-
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      loadingOverlay.style.display = 'flex';
+    // Sessão por tipo de usuário
+    if (result.type === 'visitante') {
+      sessionStorage.setItem('visitanteAtivo', Date.now());
       setTimeout(() => {
-        loadingOverlay.style.display = 'none';
-        overlay.style.opacity = 0;
-        setTimeout(() => overlay.style.display = 'none', 600);
-        closeDebugModal();
-      }, 2500);
-
-      // Sessão por tipo de usuário
-      if (result.type === 'visitante') {
-        sessionStorage.setItem('visitanteAtivo', Date.now());
-        setTimeout(() => {
-          sessionStorage.removeItem('visitanteAtivo');
-          alert('Sessão do visitante expirada. Acesso bloqueado!');
-          location.reload();
-        }, 5*60*1000);
-      } else if (result.type === 'vendedor') {
-        localStorage.setItem('vendedorStart', Date.now());
-        setTimeout(() => {
-          alert('Sessão do vendedor expirada. Faça login novamente!');
-          localStorage.removeItem('vendedorStart');
-          location.reload();
-        }, 2*60*60*1000);
-      }
-
-    } else {
-      msgEl.style.color = '#c0392b';
-      if (result.reason === 'locked') msgEl.textContent = `Bloqueado. Tente novamente em ${result.wait}s.`;
-      else if (result.reason === 'expired') msgEl.textContent = 'Sessão do visitante expirou. Recomece.';
-      else if (result.reason === 'forbidden') msgEl.textContent = 'Acesso negado — permissão insuficiente.';
-      else if (result.reason === 'fetch-error') msgEl.textContent = 'Erro ao carregar dados (fetch).';
-      else msgEl.textContent = result.reason || 'Usuário ou senha inválidos.';
+        sessionStorage.removeItem('visitanteAtivo');
+        alert('Sessão do visitante expirada. Acesso bloqueado!');
+        location.reload();
+      }, 5*60*1000);
+    } else if (result.type === 'vendedor') {
+      localStorage.setItem('vendedorStart', Date.now());
+      setTimeout(() => {
+        alert('Sessão do vendedor expirada. Faça login novamente!');
+        localStorage.removeItem('vendedorStart');
+        location.reload();
+      }, 2*60*60*1000);
     }
-  });
 
-  // Enter submete, Esc fecha
-  document.addEventListener('keydown', (e) => {
-    const backdrop = document.getElementById('debugAdmBackdrop');
-    if (!backdrop || backdrop.style.display !== 'flex') return;
-
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const btn = document.getElementById('debugBtn');
-      if (btn && !btn.disabled) btn.click();
-    } else if (e.key === 'Escape') closeDebugModal();
-  });
-
-  // Checa visitante expirado
-  const visitanteAtivo = sessionStorage.getItem('visitanteAtivo');
-  if (visitanteAtivo) {
-    const elapsed = Date.now() - visitanteAtivo;
-    if (elapsed > 5*60*1000) {
-      sessionStorage.removeItem('visitanteAtivo');
-      alert('Sessão do visitante já expirou!');
-      location.reload();
-    }
+  } else {
+    msgEl.style.color = '#c0392b';
+    if (result.reason === 'locked') msgEl.textContent = `Bloqueado. Tente novamente em ${result.wait}s.`;
+    else if (result.reason === 'expired') msgEl.textContent = 'Sessão do visitante expirou. Recomece.';
+    else if (result.reason === 'forbidden') msgEl.textContent = 'Acesso negado — permissão insuficiente.';
+    else if (result.reason === 'fetch-error') msgEl.textContent = 'Erro ao carregar dados (fetch).';
+    else if (result.reason === 'voucher-fetch-error') msgEl.textContent = 'Erro ao validar voucher.';
+    else msgEl.textContent = result.reason || 'Usuário ou senha inválidos.';
   }
+});
 
-  // Checa vendedor expirado
-  const vendedorStart = localStorage.getItem('vendedorStart');
-  if (vendedorStart) {
-    const elapsed = Date.now() - vendedorStart;
-    if (elapsed > 2*60*60*1000) {
-      localStorage.removeItem('vendedorStart');
-      alert('Sessão do vendedor expirada. Faça login novamente!');
-      location.reload();
-    }
+// Enter submete, Esc fecha
+document.addEventListener('keydown', (e) => {
+  const backdrop = document.getElementById('debugAdmBackdrop');
+  if (!backdrop || backdrop.style.display !== 'flex') return;
+
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const btn = document.getElementById('debugBtn');
+    if (btn && !btn.disabled) btn.click();
+  } else if (e.key === 'Escape') closeDebugModal();
+});
+
+// Checa visitante expirado
+const visitanteAtivo = sessionStorage.getItem('visitanteAtivo');
+if (visitanteAtivo) {
+  const elapsed = Date.now() - visitanteAtivo;
+  if (elapsed > 5*60*1000) {
+    sessionStorage.removeItem('visitanteAtivo');
+    alert('Sessão do visitante já expirou!');
+    location.reload();
   }
+}
 
+// Checa vendedor expirado
+const vendedorStart = localStorage.getItem('vendedorStart');
+if (vendedorStart) {
+  const elapsed = Date.now() - vendedorStart;
+  if (elapsed > 2*60*60*1000) {
+    localStorage.removeItem('vendedorStart');
+    alert('Sessão do vendedor expirada. Faça login novamente!');
+    location.reload();
+  }
+}
 
 
 
