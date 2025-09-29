@@ -22,7 +22,21 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      max-width: 400px;
+      max-width: 420px;
+    }
+    .logo {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+    .icon-alerta-svg {
+      margin: 15px auto;
+      animation: blink 2s infinite; /* piscada mais lenta */
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
     }
     h1 {
       font-size: 1.8rem;
@@ -33,6 +47,11 @@
       font-size: 1rem;
       margin-bottom: 20px;
       color: #555;
+    }
+    #timer {
+      font-weight: bold;
+      color: #e67e22;
+      margin-bottom: 20px;
     }
     button {
       padding: 10px 20px;
@@ -51,10 +70,38 @@
 </head>
 <body>
   <div class="container">
-    <h1>Acesso bloqueado</h1>
-    <p>Sua sessão expirou ou você não tem permissão para acessar.</p>
-    <button onclick="window.location.href='../index.html'">Voltar ao login</button>
+    <img class="logo" src="https://media.licdn.com/dms/image/v2/D4E16AQEUytzqhs0Y6A/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1683674799395?e=1759968000&v=beta&t=7hnnOollL4pNghNs1Y2B_MfcN5Kb-FMQokAhTCYwcWU" alt="Logo">
+
+
+<div id="icon-alerta-svg" class="icon-alerta-svg" role="img" aria-label="Alerta">
+  <svg viewBox="0 0 64 64" width="64" height="64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="32" cy="32" r="30" fill="#fff" stroke="#e63946" stroke-width="4"></circle>
+    <rect x="30" y="18" width="4" height="22" fill="#e63946"></rect>
+    <circle cx="32" cy="46" r="3" fill="#e63946"></circle>
+  </svg>
+</div>
+
+<h1>Acesso bloqueado</h1>
+<p>Sua sessão expirou ou você não tem permissão para acessar.</p>
+<p id="timer">Redirecionando em 40 segundos...</p>
+<button onclick="window.location.href='../index.html'">Voltar ao login</button>
+
+
   </div>
+
+  <script>
+    let timeLeft = 40;
+    const timerEl = document.getElementById("timer");
+
+    const countdown = setInterval(() => {
+      timeLeft--;
+      timerEl.textContent = `Redirecionando em ${timeLeft} segundos...`;
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        window.location.href = "../index.html";
+      }
+    }, 1000);
+  </script>
+
 </body>
 </html>
-
