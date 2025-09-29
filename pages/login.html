@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+    }
+
+    .login-container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      width: 340px;
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+      min-height: 520px; /* altura fixa para não "pular" */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .login-container img.logo {
+      width: 140px;
+      margin-bottom: 20px;
+    }
+
+    .login-container h2 {
+      margin-bottom: 16px;
+      font-size: 1.6rem;
+      color: #333;
+    }
+
+    .login-container .error-msg {
+      color: #e63946;
+      font-size: 0.9rem;
+      min-height: 1.2em;
+      margin-bottom: 8px;
+    }
+
+    /* Espaço fixo para o ícone */
+    .icon-alerta-svg {
+      margin: 10px auto 20px auto;
+      width: 64px;
+      height: 64px;
+      animation: blink 2s infinite;
+      visibility: hidden; /* já existe no layout, mas invisível */
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 12px 14px;
+      background: #0077cc;
+      color: #fff;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .login-container button:hover {
+      background: #005fa3;
+    }
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 260px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #e63946;
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.toast-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-counter {
+  font-weight: bold;
+}
+
+.toast-icon {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+.toast-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.8);
+  width: 100%;
+  border-radius: 2px;
+  margin-top: 6px;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.error-msg {
+  color: #e63946;
+  font-size: 0.9rem;
+  min-height: 1.2em;
+  margin-bottom: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.error-msg.active {
+  opacity: 1;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <!-- Logo -->
+    <img src="https://media.licdn.com/dms/image/v2/D4E16AQEUytzqhs0Y6A/profile-displaybackgroundimage-shrink_350_1400/profile-displaybackgroundimage-shrink_350_1400/0/1683674799395?e=1759968000&v=beta&t=7hnnOollL4pNghNs1Y2B_MfcN5Kb-FMQokAhTCYwcWU" alt="Logo" class="logo">
+
+    <h2>Login</h2>
+
+    <!-- Mensagem de erro -->
+    <div id="loginError" class="error-msg"></div>
+
+    <!-- Ícone de alerta piscando -->
+    <div id="icon-alerta-svg" class="icon-alerta-svg" role="img" aria-label="Alerta">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#fff" stroke="#e63946" stroke-width="4"></circle>
+        <rect x="30" y="18" width="4" height="22" fill="#e63946"></rect>
+        <circle cx="32" cy="46" r="3" fill="#e63946"></circle>
+      </svg>
+    </div>
+
+    <!-- Formulário de login -->
+    <input id="loginUser" type="text" placeholder="Usuário" autocomplete="username" />
+    <input id="loginPass" type="password" placeholder="Senha" autocomplete="current-password" />
+    <button id="loginBtn">Entrar</button>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('loginBtn');
+  const inputs = [document.getElementById('loginUser'), document.getElementById('loginPass')];
+
+  // Função para mostrar mensagem vermelha temporária
+  function mostrarErroLogin(msg, duracao = 2500) {
+    const errorBox = document.getElementById('loginError');
+    errorBox.textContent = msg;
+    errorBox.classList.add('active');
+
+    setTimeout(() => {
+      errorBox.classList.remove('active');
+      errorBox.textContent = "";
+    }, duracao);
+  }
+
+  // Toast de aviso
+  function mostrarAvisoToast(msg, duracao = 2500, sucesso = false) {
+    const oldToast = document.querySelector(".toast");
+    if (oldToast) oldToast.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.style.background = sucesso ? "#2a9d8f" : "#e63946"; // verde para sucesso
+    toast.innerHTML = `
+      <div class="toast-content">
+        <span class="toast-msg">${msg}</span>
+      </div>
+      <div class="toast-bar"></div>
+    `;
+    document.body.appendChild(toast);
+
+    const bar = toast.querySelector(".toast-bar");
+    bar.style.animation = `toastProgress ${duracao}ms linear forwards`;
+
+    setTimeout(() => {
+      toast.remove();
+    }, duracao);
+  }
+
+  // Toast de bloqueio com contador
+  function mostrarToastBloqueio(msg, tempoSegundos) {
+    const oldToast = document.querySelector(".toast");
+    if (oldToast) oldToast.remove();
+
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerHTML = `
+      <div class="toast-content">
+        <span class="toast-msg">${msg}</span>
+        <span class="toast-counter">${tempoSegundos}s</span>
+        <span class="toast-icon">⏳</span>
+      </div>
+      <div class="toast-bar"></div>
+    `;
+    document.body.appendChild(toast);
+
+    const bar = toast.querySelector(".toast-bar");
+    const counter = toast.querySelector(".toast-counter");
+    let tempoRestante = tempoSegundos;
+
+    bar.style.animation = `toastProgress ${tempoSegundos * 1000}ms linear forwards`;
+
+    const interval = setInterval(() => {
+      tempoRestante--;
+      counter.textContent = `${tempoRestante}s`;
+      if (tempoRestante <= 0) clearInterval(interval);
+    }, 1000);
+
+    setTimeout(() => toast.remove(), tempoSegundos * 1000);
+  }
+
+  // Evento de clique e Enter
+  btn.addEventListener('click', login);
+  inputs.forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  });
+
+  async function login() {
+    const user = document.getElementById('loginUser').value.trim();
+    const pass = document.getElementById('loginPass').value.trim();
+
+    if (!user || !pass) {
+      mostrarErroLogin("Preencha usuário e senha");
+      mostrarAvisoToast("Preencha usuário e senha.");
+      return;
+    }
+
+    // Recupera tentativas do localStorage
+    let attemptsData = JSON.parse(localStorage.getItem(`loginAttempts_${user}`) || '{"count":0,"timeout":0}');
+    const now = Date.now();
+
+    // Timeout em caso de bloqueio
+    if (attemptsData.timeout && now < attemptsData.timeout) {
+      const remaining = Math.ceil((attemptsData.timeout - now) / 1000);
+      mostrarToastBloqueio("Login temporariamente bloqueado", remaining);
+      return;
+    }
+
+    // Validação simulada
+    if (user !== "gabriel" || pass !== "teste123") {
+      attemptsData.count = (attemptsData.count || 0) + 1;
+
+      // Define timeout conforme contagem
+      if (attemptsData.count === 5) attemptsData.timeout = now + 30 * 1000;
+      else if (attemptsData.count === 6 || attemptsData.count === 7) attemptsData.timeout = now + 40 * 1000;
+      else if (attemptsData.count === 8 || attemptsData.count === 9) attemptsData.timeout = now + 60 * 1000;
+      else if (attemptsData.count === 10) attemptsData.timeout = now + 90 * 1000;
+      else if (attemptsData.count >= 11) {
+        localStorage.removeItem(`loginAttempts_${user}`);
+        window.location.href = `bloqueado.html?reason=tentativas-excedidas`;
+        return;
+      }
+
+      localStorage.setItem(`loginAttempts_${user}`, JSON.stringify(attemptsData));
+
+      mostrarErroLogin("Usuário ou senha inválidos");
+      mostrarAvisoToast(`Usuário ou senha inválidos. Tentativa ${attemptsData.count}`);
+      return;
+    }
+
+    // Login válido
+    localStorage.removeItem(`loginAttempts_${user}`);
+
+    const authSession = {
+      user,
+      start: Date.now(),
+      duration: 2 * 60 * 60 * 1000
+    };
+    localStorage.setItem("authSession", JSON.stringify(authSession));
+
+    mostrarAvisoToast("Login autorizado. Entrando...", 1500, true);
+    setTimeout(() => {
+      window.location.href = "../index.html";
+    }, 1500);
+  }
+});
+</script>
+
+
+</body>
+</html>
+
