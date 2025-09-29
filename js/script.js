@@ -2016,7 +2016,7 @@ function iniciarContagemRetry() {
 verificarLocal();
 
 // Atalho secreto para ignorar verificação: Ctrl + Alt + G
- const API_URL_POST = 'https://script.google.com/macros/s/AKfycbzm4O_4qHTY5UZWX8aDQ4mpgQSz0kCE_h74saMSFzVXT2GD9NxR3dcY1EfrEuQZX-PA/exec';
+ const API_URL_POST = 'https://proxy-apps-script.gab-oliveirab27.workers.dev';
 let debugAttempts = 0;
 let debugLockedUntil = 0;
 
