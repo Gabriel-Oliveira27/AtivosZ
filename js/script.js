@@ -2109,7 +2109,7 @@ async function validateDebugCredentials(usernameRaw, password) {
       const voucherResp = await fetchWithTimeout(API_URL_POST, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'voucher', user: username, pass: password, local: 'localTeste' })
+        body: JSON.stringify({ action: 'voucher', user: username, pass: password, local: 'iguatu' })
       });
 
       if (!voucherResp.ok) return { ok: false, reason: 'voucher-fetch-error' };
