@@ -1789,454 +1789,83 @@ fetch("https://photon.komoot.io/reverse?lat=-6.374&lon=-39.324")
   .then(data => console.log("Resposta API:", data))
   .catch(err => console.error("Erro API:", err));
 
-console.log("Contexto seguro?", window.isSecureContext);
 
-// Função atualizada para pegar cidade do usuário
-async function pegarCidadeUsuario() {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve("Cidade"); // fallback imediato
-      return;
-    }
-
-    let finalizado = false;
-
-    // Timeout de segurança (8s)
-    const timeoutId = setTimeout(() => {
-      if (!finalizado) {
-        finalizado = true;
-        resolve("Cidade");
-      }
-    }, 8000);
-
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      if (finalizado) return;
-      finalizado = true;
-      clearTimeout(timeoutId);
-
-      try {
-        const { latitude, longitude } = position.coords;
-        const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`;
-        const response = await fetch(url);
-        const data = await response.json();
-        const addr = data?.address;
-
-        // Checa todas as possíveis propriedades
-        if (addr?.city) resolve(addr.city);
-        else if (addr?.town) resolve(addr.town);
-        else if (addr?.village) resolve(addr.village);
-        else if (addr?.municipality) resolve(addr.municipality);
-        else resolve("Cidade");
-
-      } catch {
-        resolve("Cidade");
-      }
-    }, (err) => {
-      if (finalizado) return;
-      finalizado = true;
-      clearTimeout(timeoutId);
-      resolve("Cidade"); // qualquer erro ou permissão negada
-    }, {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 7000
-    });
-  });
-}
-
-// Função principal de verificação
-// Função para pegar a cidade do usuário usando Photon API
-async function pegarCidadeUsuario() {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve("Cidade"); // fallback imediato
-      return;
-    }
-
-    let finalizado = false;
-
-    // Timeout de segurança geolocalização
-    const geoTimeout = setTimeout(() => {
-      if (!finalizado) {
-        finalizado = true;
-        resolve("Cidade");
-      }
-    }, 7000); // 7 segundos
-
-     navigator.geolocation.getCurrentPosition(
-  pos => console.log("Callback disparado! Pos:", pos),
-  err => console.error("Erro geolocalização:", err)
-);
-
-    navigator.geolocation.getCurrentPosition((position) => {
-      if (finalizado) return;
-      finalizado = true;
-      clearTimeout(geoTimeout);
-
-      const { latitude, longitude } = position.coords;
-      const url = `https://photon.komoot.io/reverse?lat=${latitude}&lon=${longitude}`;
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const feature = data.features?.[0]?.properties;
-          if (!feature) resolve("Cidade");
-          else resolve(feature.city || feature.town || feature.village || feature.municipality || "Cidade");
-        })
-        .catch(() => resolve("Cidade"));
-
-    }, () => {
-      if (finalizado) return;
-      finalizado = true;
-      clearTimeout(geoTimeout);
-      resolve("Cidade"); // usuário negou permissão
-    }, {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-      timeout: 6000
-    });
-  });
-}
-
-// Função principal de verificação
-async function verificarLocal() {
+document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('overlayverifica');
-  const titulo = document.getElementById('overlayverifica-title');
-  const subtitulo = document.getElementById('overlayverifica-subtitle');
-  const spinner = document.querySelector('.spinnerverifica');
-  const iconSvg = document.getElementById('icon-alerta-svg');
-  const retryBtn = document.getElementById('retryBtn');
+  if (!overlay) return;
 
-  // Reset inicial
-  spinner.style.display = 'block';
-  iconSvg.style.display = 'none';
-  retryBtn.style.display = 'none';
-  retryBtn.disabled = true;
-  retryBtn.classList.remove("enabled");
+  // Mostra overlay
+  overlay.style.display = 'flex';
 
-  let carregou = false;
-
-  // Timeout geral de carregamento (15s)
-  const geralTimeout = setTimeout(() => {
-    if (!carregou) {
-      spinner.style.display = 'none';
-      iconSvg.style.display = 'flex';
-      titulo.textContent = "Demorou muito para carregar";
-      subtitulo.textContent = "Deseja começar novamente?";
-      retryBtn.style.display = 'inline-block';
-      retryBtn.disabled = false;
-      retryBtn.classList.add("enabled");
-      retryBtn.style.cursor = "pointer";
-      carregou = true;
-    }
-  }, 15000);
-
-  try {
-    // Carregando
-    titulo.textContent = "Carregando...";
-    subtitulo.textContent = "";
-    await new Promise(res => setTimeout(res, 2000));
-
-    // Abrindo sistema
-    titulo.textContent = "Abrindo o sistema...";
-    subtitulo.textContent = "";
-    await new Promise(res => setTimeout(res, 2000));
-
-    const cidade = await pegarCidadeUsuario();
-
-    if (carregou) return; // já foi tratado pelo timeout geral
-    carregou = true;
-    clearTimeout(geralTimeout);
-
-    if (cidade && cidade.toLowerCase() === "iguatu") {
-      overlay.style.opacity = 0;
-      setTimeout(() => overlay.style.display = 'none', 680);
-    } else {
-      spinner.style.display = 'none';
-      iconSvg.style.display = 'flex';
-
-      if (!cidade || cidade.toLowerCase() === "cidade") {
-        titulo.textContent = "Erro ao carregar";
-        subtitulo.textContent = "Verifique se o local está ativado e autorizado.";
-        iniciarContagemRetry();
-      } else {
-        titulo.textContent = "Sistema indisponível para sua região";
-        subtitulo.textContent = "Não foi possível carregar.";
-      }
-
-      overlay.setAttribute('tabindex', '-1');
-      overlay.focus();
-    }
-  } catch (err) {
-    if (carregou) return;
-    carregou = true;
-    clearTimeout(geralTimeout);
-
-    spinner.style.display = 'none';
-    iconSvg.style.display = 'flex';
-    titulo.textContent = "Erro ao carregar";
-    subtitulo.textContent = "Verifique se o local está ativado e autorizado.";
-    iniciarContagemRetry();
-    console.error(err);
-    overlay.setAttribute('tabindex', '-1');
-    overlay.focus();
-  }
-}
-
-// Contagem regressiva do botão retry
-function iniciarContagemRetry() {
-  const retryBtn = document.getElementById('retryBtn');
-  let tempo = 5;
-  retryBtn.style.display = 'inline-block';
-  retryBtn.textContent = `Tentar novamente em (${tempo})`;
-  retryBtn.disabled = true;
-  retryBtn.classList.remove("enabled");
-
-  const intervalo = setInterval(() => {
-    tempo--;
-    if (tempo > 0) {
-      retryBtn.textContent = `Tentar novamente em (${tempo})`;
-    } else {
-      clearInterval(intervalo);
-      retryBtn.textContent = "Tentar novamente";
-      retryBtn.disabled = false;
-      retryBtn.classList.add("enabled");
-      retryBtn.style.cursor = "pointer";
-    }
-  }, 1000);
-
-  retryBtn.onclick = () => {
-    if (!retryBtn.disabled) {
-      verificarLocal();
-    }
-  };
-}
-
-// Chama no load
-verificarLocal();
-
-// Atalho secreto para ignorar verificação: Ctrl + Alt + G
- const API_URL_POST = 'https://proxy-apps-script.gab-oliveirab27.workers.dev';
-let debugAttempts = 0;
-let debugLockedUntil = 0;
-
-// Atalho Ctrl+Alt+G
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'g') openDebugModal();
+  // Delay de 3 segundos para "carregar"
+  setTimeout(() => {
+    checkAuth();
+  }, 3000);
 });
 
-// Abre modal debug
-function openDebugModal() {
-  const backdrop = document.getElementById('debugAdmBackdrop');
-  const modal = document.getElementById('debugAdm');
-  if (!backdrop || !modal) return;
-  backdrop.style.display = 'flex';
-  modal.setAttribute('aria-hidden', 'false');
-
-  const user = document.getElementById('debugUser');
-  setTimeout(() => {
-    user && user.focus();
-    user && user.addEventListener('input', forceLowercaseHandler);
-  }, 60);
-}
-
-// Fecha modal debug
-function closeDebugModal() {
-  const backdrop = document.getElementById('debugAdmBackdrop');
-  const modal = document.getElementById('debugAdm');
-  if (!backdrop || !modal) return;
-  backdrop.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-
-  const user = document.getElementById('debugUser');
-  const pass = document.getElementById('debugPass');
-  const msg = document.getElementById('debugMsg');
-  if (user) { user.value = ''; user.removeEventListener('input', forceLowercaseHandler); }
-  if (pass) pass.value = '';
-  if (msg) msg.textContent = '';
-}
-
-// Força lowercase
-function forceLowercaseHandler(e) {
-  const el = e.target;
-  const pos = el.selectionStart;
-  el.value = el.value.toLowerCase();
-  try { el.setSelectionRange(pos, pos); } catch (err) {}
-}
-
-// fetch com timeout
-function fetchWithTimeout(url, opts = {}, timeout = 6000) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const signal = controller.signal;
-  return fetch(url, {...opts, signal}).finally(() => clearTimeout(id));
-}
-
-// Validação via API
-async function validateDebugCredentials(usernameRaw, password) {
-  const now = Date.now();
-  if (debugLockedUntil && now < debugLockedUntil) {
-    return { ok: false, reason: 'locked', wait: Math.ceil((debugLockedUntil - now)/1000) };
-  }
-
-  const username = (usernameRaw || '').trim().toLowerCase();
-
-  try {
-    const resp = await fetchWithTimeout(API_URL_POST, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'login', user: username, pass: password, local: 'localTeste' })
-    });
-
-    if (!resp.ok) return { ok: false, reason: 'fetch-error' };
-    const data = await resp.json();
-
-    if (!data.ok) {
-      debugAttempts++;
-      if (debugAttempts >= 3) {
-        debugLockedUntil = Date.now() + 30000; // bloqueia 30s
-        return { ok: false, reason: 'locked', wait: 30 };
-      }
-      return { ok: false, reason: data.error || 'invalid' };
-    }
-
-    debugAttempts = 0;
-    const perm = (data.perm || '').toLowerCase();
-
-    // --- VISITANTE ---
-    if (perm === 'visitante') {
-      // Consumir voucher
-      const voucherResp = await fetchWithTimeout(API_URL_POST, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'voucher', user: username, pass: password, local: 'iguatu' })
-      });
-
-      if (!voucherResp.ok) return { ok: false, reason: 'voucher-fetch-error' };
-      const voucherData = await voucherResp.json();
-      if (!voucherData.ok) return { ok: false, reason: voucherData.error || 'voucher-invalid' };
-
-      // Controla sessão visitante
-      localStorage.setItem('visitanteKey', JSON.stringify({ start: Date.now() }));
-      return { ok: true, user: voucherData, type: 'visitante' };
-    }
-
-    // --- VENDEDOR ---
-    if (perm === 'vendedor') return { ok: true, user: data, type: 'vendedor', start: Date.now() };
-
-    // --- ADMIN / SUPORTE / GER ---
-    if (['admin','suporte','ger'].includes(perm)) return { ok: true, user: data, type: perm };
-
-    return { ok: false, reason: 'forbidden' };
-
-  } catch (err) {
-    console.error('Erro validateDebugCredentials:', err);
-    return { ok: false, reason: 'network' };
-  }
-}
-
-// Handler botão debug
-document.getElementById('debugBtn').addEventListener('click', async () => {
-  const userEl = document.getElementById('debugUser');
-  const passEl = document.getElementById('debugPass');
-  const msgEl = document.getElementById('debugMsg');
-  const spinner = document.getElementById('debugSpinner');
-  const btn = document.getElementById('debugBtn');
+function checkAuth() {
   const overlay = document.getElementById('overlayverifica');
+  const auth = JSON.parse(localStorage.getItem('authSession') || 'null');
 
-  const username = (userEl.value || '').trim();
-  const password = passEl.value || '';
-  msgEl.textContent = '';
-  if (!username || !password) {
-    msgEl.textContent = 'Preencha usuário e senha.';
+  if (!auth) {
+    // Nenhuma sessão → login
+    window.location.href = 'pages/login.html';
     return;
   }
 
-  btn.disabled = true;
-  spinner.style.display = 'block';
+  const now = Date.now();
+  if (auth.duration && now > auth.start + auth.duration) {
+    // Sessão expirada → bloqueado
+    const reason = encodeURIComponent('sessao-expirada');
+    localStorage.removeItem('authSession');
+    window.location.href = `pages/bloqueado.html?reason=${reason}`;
+    return;
+  }
 
-  const result = await validateDebugCredentials(username, password);
-
-  spinner.style.display = 'none';
-  btn.disabled = false;
-
-  if (result.ok) {
-    msgEl.style.color = 'green';
-    msgEl.textContent = 'Acesso liberado. Abrindo sistema...';
-
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    loadingOverlay.style.display = 'flex';
+  // Sessão válida → libera overlay
+  if (overlay) {
+    overlay.style.opacity = 0;
     setTimeout(() => {
-      loadingOverlay.style.display = 'none';
-      overlay.style.opacity = 0;
-      setTimeout(() => overlay.style.display = 'none', 600);
-      closeDebugModal();
-    }, 2500);
-
-    // Sessão por tipo de usuário
-    if (result.type === 'visitante') {
-      sessionStorage.setItem('visitanteAtivo', Date.now());
-      setTimeout(() => {
-        sessionStorage.removeItem('visitanteAtivo');
-        alert('Sessão do visitante expirada. Acesso bloqueado!');
-        location.reload();
-      }, 5*60*1000);
-    } else if (result.type === 'vendedor') {
-      localStorage.setItem('vendedorStart', Date.now());
-      setTimeout(() => {
-        alert('Sessão do vendedor expirada. Faça login novamente!');
-        localStorage.removeItem('vendedorStart');
-        location.reload();
-      }, 2*60*60*1000);
-    }
-
-  } else {
-    msgEl.style.color = '#c0392b';
-    if (result.reason === 'locked') msgEl.textContent = `Bloqueado. Tente novamente em ${result.wait}s.`;
-    else if (result.reason === 'expired') msgEl.textContent = 'Sessão do visitante expirou. Recomece.';
-    else if (result.reason === 'forbidden') msgEl.textContent = 'Acesso negado — permissão insuficiente.';
-    else if (result.reason === 'fetch-error') msgEl.textContent = 'Erro ao carregar dados (fetch).';
-    else if (result.reason === 'voucher-fetch-error') msgEl.textContent = 'Erro ao validar voucher.';
-    else msgEl.textContent = result.reason || 'Usuário ou senha inválidos.';
-  }
-});
-
-// Enter submete, Esc fecha
-document.addEventListener('keydown', (e) => {
-  const backdrop = document.getElementById('debugAdmBackdrop');
-  if (!backdrop || backdrop.style.display !== 'flex') return;
-
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    const btn = document.getElementById('debugBtn');
-    if (btn && !btn.disabled) btn.click();
-  } else if (e.key === 'Escape') closeDebugModal();
-});
-
-// Checa visitante expirado
-const visitanteAtivo = sessionStorage.getItem('visitanteAtivo');
-if (visitanteAtivo) {
-  const elapsed = Date.now() - visitanteAtivo;
-  if (elapsed > 5*60*1000) {
-    sessionStorage.removeItem('visitanteAtivo');
-    alert('Sessão do visitante já expirou!');
-    location.reload();
+      overlay.style.display = 'none';
+    }, 600);
   }
 }
 
-// Checa vendedor expirado
-const vendedorStart = localStorage.getItem('vendedorStart');
-if (vendedorStart) {
-  const elapsed = Date.now() - vendedorStart;
-  if (elapsed > 2*60*60*1000) {
-    localStorage.removeItem('vendedorStart');
-    alert('Sessão do vendedor expirada. Faça login novamente!');
-    location.reload();
+// Redirecionamento suave para login
+function goToLogin() {
+  if (document.visibilityState === "visible") {
+    document.body.style.transition = "opacity 0.6s ease";
+    document.body.style.opacity = "0";
+    setTimeout(() => {
+      window.location.href = 'pages/login.html';
+    }, 600);
   }
-}
+} 
 
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  const overlay = document.getElementById('overlayverifica');
+  if (!overlay) return;
 
+  // Exibe overlay e configura estilo
+  overlay.style.display = 'flex';
+  overlay.style.opacity = '1';
 
+  // Altera textos
+  const title = document.getElementById('overlayverifica-title');
+  const subtitle = document.getElementById('overlayverifica-subtitle');
+  title.textContent = "Encerrando sessão...";
+  subtitle.textContent = "";
+
+  // Spinner visível (ou ícone se preferir)
+  const spinner = overlay.querySelector('.spinnerverifica');
+  if (spinner) spinner.style.display = 'block';
+
+  // Tempo de espera antes de logout
+  setTimeout(() => {
+    localStorage.removeItem('authSession');
+    window.location.href = 'pages/login.html';
+  }, 2500);
+});
 
 
 async function pegarCidadeUsuario() {
@@ -3158,3 +2787,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
