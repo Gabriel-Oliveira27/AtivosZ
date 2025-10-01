@@ -493,22 +493,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let localTentativa = null;
     if (isVisitante || (!["admin","suporte"].includes(userPerm))) {
-      try {
-        const pos = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
-        });
-        localTentativa = await pegarCidade(pos.coords.latitude, pos.coords.longitude);
-        if (!localTentativa) {
-          mostrarAvisoToast("Não foi possível obter sua cidade, abra em outro navegador ou atualize.");
-          mostrarErroLogin("Cidade não capturada");
-          return;
-        }
-      } catch {
-        mostrarAvisoToast("Ative o local no navegador para continuar");
-        mostrarErroLogin("Ative/autorize a localização no navegador");
-        return;
-      }
+  try {
+    if (!navigator.geolocation) {
+      mostrarAvisoToast("Seu navegador não suporta localização.");
+      mostrarErroLogin("Navegador incompatível para validar local");
+      return;
     }
+
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 });
+    });
+
+    localTentativa = await pegarCidade(pos.coords.latitude, pos.coords.longitude);
+
+    if (!localTentativa) {
+      mostrarAvisoToast("Não foi possível obter sua cidade. Tente em outro navegador.");
+      mostrarErroLogin("Cidade não capturada");
+      return;
+    }
+  } catch (err) {
+    console.warn("Erro geolocalização:", err);
+    let msg = "Não foi possível validar sua localização.";
+    if (err.code === 1) msg = "Permissão de localização negada.";
+    else if (err.code === 2) msg = "Localização indisponível.";
+    else if (err.code === 3) msg = "Tempo esgotado ao obter localização.";
+    
+    mostrarAvisoToast(msg);
+    mostrarErroLogin(msg);
+    return;
+  }
+}
+
 
     const actionType = isVisitante ? "voucher" : "login";
 
