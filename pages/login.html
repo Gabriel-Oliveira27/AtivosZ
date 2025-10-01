@@ -162,7 +162,180 @@
 .error-msg.active {
   opacity: 1;
 }
+/* Popup principal */
+#popupVoucher {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
 
+/* Caixa branca */
+#popupVoucher .popupContent {
+  background: #fff;
+  width: 420px;
+  max-width: 90%;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Ícones no topo */
+#popupVoucher .iconsTop {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+#popupVoucher .ticketIcon,
+#popupVoucher .planetIcon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
+/* SVG de progresso */
+#popupVoucher .progressCircle {
+  width: 100px; /* tamanho do círculo */
+  height: 100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#popupVoucher .progressCircle circle {
+  transition: stroke-dashoffset 0.3s linear;
+}
+
+/* Texto centralizado no círculo */
+#popupVoucher .progressText {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  dominant-baseline: middle;
+  text-anchor: middle;
+  transform: rotate(90deg) translate(0px, -50px); /* ajustado para círculo menor */
+}
+
+/* Títulos e textos */
+#popupVoucher h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+#popupVoucher p {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+}
+
+/* Entrada suave do popup */
+#popupVoucher.show {
+  animation: popupFadeIn 0.4s ease forwards;
+}
+
+@keyframes popupFadeIn {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+/* Overlay geral */
+#overlaylogin {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* escurece o fundo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  font-family: 'Arial', sans-serif;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+/* Popup centralizado */
+#overlaylogin .popup {
+  background: #ffffff; /* branco */
+  padding: 40px 30px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  text-align: center;
+  color: #222; /* texto escuro */
+  animation: popupIn 0.4s ease;
+}
+
+/* Títulos */
+#overlaylogin h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #222;
+}
+#overlaylogin h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #555;
+}
+
+/* Loader */
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 0.7s linear infinite;
+}
+.loader::before,
+.loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 5px solid #ccc; /* tom branco mais escuro */
+  animation: prixClipFix 1.4s linear infinite;
+}
+.loader::after {
+  transform: rotate3d(90, 90, 0, 180deg);
+  border-color: #007bff; /* azul */
+}
+
+/* Animações */
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes prixClipFix {
+  0% { clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0); }
+  50% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0); }
+  75%, 100% { clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%); }
+}
+
+/* Entrada do popup */
+@keyframes popupIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
   </style>
 </head>
 <body>
@@ -191,93 +364,117 @@
     <button id="loginBtn">Entrar</button>
   </div>
 
+<div id="popupVoucher" style="display: none;">
+  <div class="popupContent">
+    <div class="iconsTop">
+      <img class="ticketIcon" src="https://cdn-icons-png.flaticon.com/128/3702/3702886.png" alt="Ticket">
+      <img class="planetIcon" src="https://cdn-icons-png.flaticon.com/128/3385/3385744.png" alt="Internet">
+    </div>
+
+    <!-- Círculo de progresso SVG -->
+    <svg class="progressCircle" width="200" height="200" viewBox="-25 -25 250 250" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(-90deg);">
+      <!-- fundo do círculo -->
+      <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px"></circle>
+      <!-- círculo do progresso -->
+      <circle class="progressFill" r="90" cx="100" cy="100" fill="transparent" stroke="#478ad1" stroke-width="16px" stroke-linecap="round"
+              stroke-dasharray="565.48" stroke-dashoffset="565.48"></circle>
+      <!-- texto central -->
+      <text class="progressText" x="100" y="117" fill="#478ad1" font-size="52px" font-weight="bold" text-anchor="middle">0%</text>
+    </svg>
+
+    <h2>Acesso de visitante</h2>
+    <p>Validando seu voucher, aguarde...</p>
+    <p>Após a liberação, você poderá criar cartazes e imprimir declarações temporariamente.</p>
+  </div>
+</div>
+
+
+<div id="overlaylogin" style="display: none;">
+  <div class="popup">
+    <h2>Autenticando...</h2>
+    <h5>Por favor, aguarde enquanto liberamos sua sessão</h5>
+    <span class="loader"></span>
+  </div>
+</div>
+
 <script>
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('loginBtn');
-  const inputs = [document.getElementById('loginUser'), document.getElementById('loginPass')];
+  const inputUser = document.getElementById('loginUser');
+  const inputPass = document.getElementById('loginPass');
+  const overlayLogin = document.getElementById('overlaylogin');
+  const popupVoucher = document.getElementById('popupVoucher');
+  const progressCircle = popupVoucher.querySelector('.progressCircle');
+  const progressFill = popupVoucher.querySelector('.fill');
+  const progressText = popupVoucher.querySelector('.progressText');
 
-  // Função para mostrar mensagem vermelha temporária
+  let userPerm = null;
+  let isVisitante = false;
+
   function mostrarErroLogin(msg, duracao = 2500) {
     const errorBox = document.getElementById('loginError');
     errorBox.textContent = msg;
     errorBox.classList.add('active');
-
     setTimeout(() => {
       errorBox.classList.remove('active');
       errorBox.textContent = "";
     }, duracao);
   }
 
-  // Toast de aviso
   function mostrarAvisoToast(msg, duracao = 2500, sucesso = false) {
     const oldToast = document.querySelector(".toast");
     if (oldToast) oldToast.remove();
 
     const toast = document.createElement("div");
     toast.className = "toast";
-    toast.style.background = sucesso ? "#2a9d8f" : "#e63946"; // verde para sucesso
-    toast.innerHTML = `
-      <div class="toast-content">
-        <span class="toast-msg">${msg}</span>
-      </div>
-      <div class="toast-bar"></div>
-    `;
+    toast.style.background = sucesso ? "#2a9d8f" : "#e63946";
+    toast.innerHTML = `<div class="toast-content"><span class="toast-msg">${msg}</span></div><div class="toast-bar"></div>`;
     document.body.appendChild(toast);
 
     const bar = toast.querySelector(".toast-bar");
     bar.style.animation = `toastProgress ${duracao}ms linear forwards`;
 
-    setTimeout(() => {
-      toast.remove();
-    }, duracao);
+    setTimeout(() => toast.remove(), duracao);
   }
 
-  // Toast de bloqueio com contador
-  function mostrarToastBloqueio(msg, tempoSegundos) {
-    const oldToast = document.querySelector(".toast");
-    if (oldToast) oldToast.remove();
-
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.innerHTML = `
-      <div class="toast-content">
-        <span class="toast-msg">${msg}</span>
-        <span class="toast-counter">${tempoSegundos}s</span>
-        <span class="toast-icon">⏳</span>
-      </div>
-      <div class="toast-bar"></div>
-    `;
-    document.body.appendChild(toast);
-
-    const bar = toast.querySelector(".toast-bar");
-    const counter = toast.querySelector(".toast-counter");
-    let tempoRestante = tempoSegundos;
-
-    bar.style.animation = `toastProgress ${tempoSegundos * 1000}ms linear forwards`;
-
-    const interval = setInterval(() => {
-      tempoRestante--;
-      counter.textContent = `${tempoRestante}s`;
-      if (tempoRestante <= 0) clearInterval(interval);
-    }, 1000);
-
-    setTimeout(() => toast.remove(), tempoSegundos * 1000);
+  async function pegarCidade(lat, lng) {
+    try {
+      const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await resp.json();
+      return (data.address.city || data.address.town || data.address.village || "").toLowerCase();
+    } catch {
+      return null;
+    }
   }
 
-  // Evento de clique e Enter
-  btn.addEventListener('click', login);
-  inputs.forEach(input => {
-    input.addEventListener('keydown', e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        btn.click();
+  // Captura permissão do usuário
+  inputUser.addEventListener("blur", async () => {
+    const user = inputUser.value.trim().toLowerCase();
+    if (!user) return;
+
+    isVisitante = user === "visitante";
+
+    if (!isVisitante) {
+      try {
+        const resp = await fetch("https://proxy-apps-script.gab-oliveirab27.workers.dev/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "login", user })
+        });
+        const data = await resp.json();
+        userPerm = data.perm || null;
+      } catch (err) {
+        console.error("Erro ao buscar permissão:", err);
+        userPerm = null;
       }
-    });
+    }
   });
 
   async function login() {
-    const user = document.getElementById('loginUser').value.trim();
-    const pass = document.getElementById('loginPass').value.trim();
+    const user = inputUser.value.trim().toLowerCase();
+    const pass = inputPass.value.trim();
 
     if (!user || !pass) {
       mostrarErroLogin("Preencha usuário e senha");
@@ -285,55 +482,126 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Recupera tentativas do localStorage
+    // Bloqueio por tentativas
     let attemptsData = JSON.parse(localStorage.getItem(`loginAttempts_${user}`) || '{"count":0,"timeout":0}');
     const now = Date.now();
-
-    // Timeout em caso de bloqueio
     if (attemptsData.timeout && now < attemptsData.timeout) {
       const remaining = Math.ceil((attemptsData.timeout - now) / 1000);
-      mostrarToastBloqueio("Login temporariamente bloqueado", remaining);
+      mostrarAvisoToast(`Login bloqueado. Aguarde ${remaining}s.`);
       return;
     }
 
-    // Validação simulada
-    if (user !== "gabriel" || pass !== "teste123") {
-      attemptsData.count = (attemptsData.count || 0) + 1;
-
-      // Define timeout conforme contagem
-      if (attemptsData.count === 5) attemptsData.timeout = now + 30 * 1000;
-      else if (attemptsData.count === 6 || attemptsData.count === 7) attemptsData.timeout = now + 40 * 1000;
-      else if (attemptsData.count === 8 || attemptsData.count === 9) attemptsData.timeout = now + 60 * 1000;
-      else if (attemptsData.count === 10) attemptsData.timeout = now + 90 * 1000;
-      else if (attemptsData.count >= 11) {
-        localStorage.removeItem(`loginAttempts_${user}`);
-        window.location.href = `bloqueado.html?reason=tentativas-excedidas`;
+    let localTentativa = null;
+    if (isVisitante || (!["admin","suporte"].includes(userPerm))) {
+      try {
+        const pos = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+        });
+        localTentativa = await pegarCidade(pos.coords.latitude, pos.coords.longitude);
+        if (!localTentativa) {
+          mostrarAvisoToast("Não foi possível obter sua cidade, abra em outro navegador ou atualize.");
+          mostrarErroLogin("Cidade não capturada");
+          return;
+        }
+      } catch {
+        mostrarAvisoToast("Ative o local no navegador para continuar");
+        mostrarErroLogin("Ative/autorize a localização no navegador");
         return;
       }
-
-      localStorage.setItem(`loginAttempts_${user}`, JSON.stringify(attemptsData));
-
-      mostrarErroLogin("Usuário ou senha inválidos");
-      mostrarAvisoToast(`Usuário ou senha inválidos. Tentativa ${attemptsData.count}`);
-      return;
     }
 
-    // Login válido
-    localStorage.removeItem(`loginAttempts_${user}`);
+    const actionType = isVisitante ? "voucher" : "login";
 
-    const authSession = {
-      user,
-      start: Date.now(),
-      duration: 2 * 60 * 60 * 1000
-    };
-    localStorage.setItem("authSession", JSON.stringify(authSession));
+    try {
+      if (!isVisitante) overlayLogin.style.display = 'flex';
+      const response = await fetch("https://proxy-apps-script.gab-oliveirab27.workers.dev/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: actionType, user, pass, local: localTentativa })
+      });
+      const result = await response.json();
 
-    mostrarAvisoToast("Login autorizado. Entrando...", 1500, true);
-    setTimeout(() => {
-      window.location.href = "../index.html";
-    }, 1500);
+      if ((result.status === "autorizado") || (result.ok && isVisitante)) {
+        localStorage.removeItem(`loginAttempts_${user}`);
+        const authSession = { user, start: Date.now(), duration: 2*60*60*1000 };
+        localStorage.setItem("authSession", JSON.stringify(authSession));
+
+        if (isVisitante) {
+          overlayLogin.style.display = 'none';
+          popupVoucher.style.display = 'flex';
+
+          // Inicia progress do SVG
+          let progress = 20; // começa em 20%
+          const circle = progressCircle.querySelector('circle:nth-child(2)');
+          const radius = circle.r.baseVal.value;
+          const circ = 2 * Math.PI * radius;
+          circle.style.strokeDasharray = circ;
+          circle.style.strokeDashoffset = circ * (1 - progress/100);
+          progressText.textContent = `${Math.floor(progress)}%`;
+
+          const interval = setInterval(() => {
+            progress += Math.random() * 5; // incremento fluido
+            if (progress > 100) progress = 100;
+            circle.style.strokeDashoffset = circ * (1 - progress/100);
+            progressText.textContent = `${Math.floor(progress)}%`;
+            if (progress >= 100) {
+              clearInterval(interval);
+              setTimeout(() => {
+                popupVoucher.style.display = 'none';
+                window.location.href = "../index.html";
+              }, 500);
+            }
+          }, 200);
+
+        } else {
+          setTimeout(() => {
+            overlayLogin.style.display = 'none';
+            mostrarAvisoToast("Login autorizado. Entrando...", 1500, true);
+            setTimeout(() => window.location.href = "../index.html", 500);
+          }, 500);
+        }
+
+      } else {
+  overlayLogin.style.display = 'none';
+  attemptsData.count = (attemptsData.count || 0) + 1;
+  if (attemptsData.count >= 5) attemptsData.timeout = now + 30000;
+  localStorage.setItem(`loginAttempts_${user}`, JSON.stringify(attemptsData));
+
+  if (result.motivo === "localincorreto" || result.motivo === "local-nao-permitido") {
+    window.location.href = "bloqueado.html?reason=local-nao-permitido";
+    return;
   }
+
+  const motivoMsg = result.motivo === "senhaincorreta"
+    ? "Senha incorreta"
+    : result.ok === false && result.error
+      ? result.error
+      : "Não autorizado";
+
+  mostrarErroLogin(motivoMsg);
+  mostrarAvisoToast(motivoMsg);
+}
+
+    } catch (err) {
+      overlayLogin.style.display = 'none';
+      console.error("Erro na requisição:", err);
+      mostrarErroLogin("Falha de conexão com servidor");
+      mostrarAvisoToast("Erro de rede. Tente novamente.");
+    }
+  }
+
+  btn.addEventListener('click', login);
+  [inputUser, inputPass].forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  });
 });
+
+
 </script>
 
 
