@@ -32,7 +32,7 @@
     }
     .icon-alerta-svg {
       margin: 15px auto;
-      animation: blink 2s infinite; /* piscada mais lenta */
+      animation: blink 2s infinite;
     }
     @keyframes blink {
       0%, 50%, 100% { opacity: 1; }
@@ -81,27 +81,74 @@
   </svg>
 </div>
 
-<h1>Acesso bloqueado</h1>
-<p>Sua sessão expirou ou você não tem permissão para acessar.</p>
-<p id="timer">Redirecionando em 40 segundos...</p>
+<h1 id="titulo">Acesso bloqueado</h1>
+<p id="mensagem">Motivo indefinido.</p>
+<p id="timer"></p>
 <button onclick="window.location.href='../index.html'">Voltar ao login</button>
-
 
   </div>
 
-  <script>
-    let timeLeft = 40;
-    const timerEl = document.getElementById("timer");
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const reason = params.get('reason') || 'indefinido';
 
-    const countdown = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = `Redirecionando em ${timeLeft} segundos...`;
-      if (timeLeft <= 0) {
-        clearInterval(countdown);
-        window.location.href = "../index.html";
+  const titulo = document.getElementById('titulo');
+  const mensagem = document.getElementById('mensagem');
+  const timerEl = document.getElementById('timer');
+  const iconEl = document.getElementById('icon-alerta-svg').querySelector('svg');
+
+  let timeoutSegundos = 0;
+
+  // Reset estilo do ícone
+  iconEl.style.stroke = "#e63946";
+  iconEl.style.fill = "#fff";
+
+  switch(reason) {
+    case 'sessao-expirada':
+      mensagem.textContent = "Sua sessão expirou.";
+      titulo.textContent = "Sessão Expirada";
+      iconEl.style.stroke = "#f39c12"; // laranja
+      break;
+    case 'tentativas-excedidas':
+      mensagem.textContent = "Excesso de tentativas de login. Aguarde antes de tentar novamente.";
+      titulo.textContent = "Login Bloqueado Temporariamente";
+      timeoutSegundos = 60;
+      iconEl.style.stroke = "#e74c3c"; // vermelho
+      break;
+    case 'local-nao-permitido':
+      mensagem.textContent = "Localização não permitida.";
+      titulo.textContent = "Acesso Negado";
+      iconEl.style.stroke = "#3498db"; // azul
+      break;
+    case 'voucher-encerrado':
+      mensagem.textContent = "Voucher encerrado.";
+      titulo.textContent = "Voucher Inválido";
+      iconEl.style.stroke = "#8e44ad"; // roxo
+      break;
+    default:
+      mensagem.textContent = "Motivo indefinido.";
+      titulo.textContent = "Acesso Bloqueado";
+  }
+
+  if (timeoutSegundos > 0) {
+    let restante = timeoutSegundos;
+    timerEl.textContent = `Aguarde ${restante}s`;
+
+    const interval = setInterval(() => {
+      restante--;
+      timerEl.textContent = `Aguarde ${restante}s`;
+      if (restante <= 0) {
+        clearInterval(interval);
+        timerEl.textContent = "";
       }
     }, 1000);
-  </script>
+  }
+});
+
+</script>
+
 
 </body>
 </html>
+
