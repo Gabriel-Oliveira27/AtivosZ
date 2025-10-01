@@ -89,154 +89,28 @@
 /* Acessibilidade: foco no overlay para leitores */
 #overlayverifica:focus { outline: none; }
 
-.retry-btn {
-  margin-top: 20px;
-  padding: 12px 28px;
+#logoutBtn {
+  display: inline-flex;           /* Alinha ícone e texto horizontalmente */
+  align-items: center;            /* Centraliza verticalmente */
+  justify-content: center;
+  padding: 10px 16px;
+  background: #e63946;
+  color: #fff;
   border: none;
-  border-radius: 30px;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  cursor: not-allowed;
-  opacity: 0.6;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
-}
-
-/* Estado habilitado */
-.retry-btn.enabled {
+  border-radius: 8px;
   cursor: pointer;
-  opacity: 1;
-}
-
-/* Hover refinado */
-.retry-btn.enabled:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.45);
-  background: linear-gradient(135deg, #0056b3, #007bff);
-}
-
-/* Clique */
-.retry-btn.enabled:active {
-  transform: scale(0.97);
-  box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
-}
-
-#debugAdmBackdrop {
-  position: fixed;
-  inset: 0; /* topo/direita/baixo/esquerda 0 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.55); /* escurece atrás */
-  z-index: 10050; /* acima do overlayverifica */
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-}
-
-/* Modal central */
-.debug-adm {
-  width: 360px;
-  max-width: calc(100% - 40px);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.28);
-  text-align: center;
-  z-index: 10060; /* acima do backdrop */
-  border: 1px solid rgba(0,0,0,0.06);
-  transform: translateY(-6px);
-  animation: debugModalIn 260ms cubic-bezier(.2,.9,.3,1) forwards;
-}
-@keyframes debugModalIn {
-  from { opacity: 0; transform: translateY(-14px) scale(.995); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.debug-adm h2 { margin: 0 0 6px; font-size:1.05rem; }
-.debug-adm p { margin: 0; color:#666; font-size:.95rem; }
-
-/* linha inputs */
-.debug-row { 
-  display: flex; 
-  gap: 8px; 
-  flex-wrap: wrap; /* garante quebra em telas menores */
-}
-
-.debug-row input {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e6e6e6;
-  font-size: .95rem;
-  flex: 1;
-  min-width: 0; /* evita extrapolar */
-  box-sizing: border-box;
-  background: #fafafa;
-  text-transform: none !important; /* anula regra global */
-}
-
-
-/* Forçar minúsculo só para o user */
-#debugUser {
-  text-transform: lowercase !important;
-}
-
-/* Senha não deve alterar */
-#debugPass {
-  text-transform: none !important;
-}
-
-/* mini spinner */
-.mini-spinner {
-  width:20px; height:20px; border-radius:50%;
-  background: linear-gradient(0deg, rgba(0,123,255,0.18) 33%, #007bff 100%);
-  position: relative;
-  box-sizing: border-box;
-  animation: rotation 0.9s linear infinite;
-}
-.mini-spinner::after { content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:16px;height:16px;border-radius:50%;background:#f0f0f0; }
-
-.msg { color: #c0392b; font-size: .95rem; margin:0; }
-
-/* botão sofisticado (reutiliza seu estilo) */
-.retry-btn {
-  padding: 8px 16px; border-radius: 20px; border: none;
-  background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; font-weight:600;
-  box-shadow: 0 6px 16px rgba(0,123,255,0.22);
-}
-.retry-btn[disabled] { opacity:0.6; cursor:not-allowed; transform:none; box-shadow:none; }
-
-/* responsivo */
-@media (max-width:420px){
-  .debug-adm { width: 92%; padding: 12px; }
-  .debug-row input { padding: 8px 10px; font-size: .9rem; }
-}
-/* Tela de carregamento */
-#loadingOverlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.9);
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  flex-direction: column;
-}
-
-#loadingOverlay span {
-  margin-top: 10px;
   font-size: 1rem;
-  opacity: 0.8;
+  transition: background 0.3s;
 }
 
+#logoutBtn:hover {
+  background: #c5303f;
+}
+
+#logoutBtn svg {
+  margin-left: 8px;               /* Espaço entre texto e ícone */
+  stroke: #fff;
+}
 
     input[type="text"], input[type="tel"] {
   text-transform: uppercase;
