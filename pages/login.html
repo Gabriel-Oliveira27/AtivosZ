@@ -487,7 +487,9 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+
+
+  document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('loginBtn');
   const inputUser = document.getElementById('loginUser');
   const inputPass = document.getElementById('loginPass');
@@ -681,23 +683,13 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (err.code === 3) msg = "Tempo esgotado ao obter localização.";
       else if (err.code === 4) msg = err.message;
 
-      mostrarAvisoToast(`${msg} <button id='btnCep'>Inserir CEP</button>`);
       mostrarErroLogin(msg);
-
-      // Ativa botão do CEP
-      setTimeout(() => {
-        const btnCep = document.getElementById("btnCep");
-        if (btnCep) {
-          btnCep.addEventListener("click", () => {
-            popupCEP.style.display = "flex";
-          });
-        }
-      }, 100);
+      popupCEP.style.display = "flex"; // abre popup direto
       return;
     }
 
     if (!localTentativa) {
-      popupCEP.style.display = "flex";
+      popupCEP.style.display = "flex"; // abre popup direto
       return;
     }
 
@@ -747,6 +739,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+
 </script>
 
 
