@@ -430,61 +430,65 @@ function abrirPopupCartaz(callback) {
   document.body.appendChild(overlay);
 }
 
+
 function aplicarPosicoesGarantias(wrapper, cartazSelecionado) {
   const posicoesExtras = {
- cartaz2: {
-  // ===== Garantia 12 meses =====
-  "g12-numero": ["252.33px", "997px"],
-  "g12-parcela": ["312.33px", "997px"],
-  "g12-cheio":  ["409.33px", "997px"],
-  "g12-total":  ["309.33px", "1009px"],
-  "g12-taxa1":  ["393.33px", "1012px"],
-  "g12-taxa2":  ["444.33px", "1012px"],
+    cartaz2: {
+    // ===== Garantia 12 meses =====
+    "g12-numero": ["252.33px", "997px"],
+    "g12-parcela": ["312.33px", "997px"],
+    "g12-cheio":  ["409.33px", "997px"],
+    "g12-total":  ["309.33px", "1009px"],
+    "g12-taxa1":  ["393.33px", "1012px"],
+    "g12-taxa2":  ["444.33px", "1012px"],
 
-  // ===== Garantia +24 meses =====
-  "g24-numero": ["252.33px", "1040.90px"],
-  "g24-parcela":["312.33px", "1039.78px"],
-  "g24-cheio":  ["412.33px", "1039.78px"],
-  "g24-total":  ["312.33px", "1054.78px"],
-  "g24-taxa1":  ["395.33px", "1055.78px"],
-  "g24-taxa2":  ["445.33px", "1055.78px"],
+    // ===== Garantia +24 meses =====
+    "g24-numero": ["252.33px", "1040.90px"],
+    "g24-parcela":["312.33px", "1039.78px"],
+    "g24-cheio":  ["412.33px", "1039.78px"],
+    "g24-total":  ["312.33px", "1054.78px"],
+    "g24-taxa1":  ["395.33px", "1055.78px"],
+    "g24-taxa2":  ["445.33px", "1055.78px"],
 
-  // ===== Garantia +36 meses =====
-  "g36-numero": ["520.33px", "1011.78px"],
-  "g36-parcela":["579.33px", "1011.78px"],
-  "g36-cheio":  ["684.33px", "1011.78px"],
-  "g36-total":  ["579.33px", "1026.78px"],
-  "g36-taxa1":  ["662.33px", "1027.78px"],
-  "g36-taxa2":  ["712.33px", "1027.78px"]
-}
+    // ===== Garantia +36 meses =====
+    "g36-numero": ["520.33px", "1011.78px"],
+    "g36-parcela":["579.33px", "1011.78px"],
+    "g36-cheio":  ["684.33px", "1011.78px"],
+    "g36-total":  ["579.33px", "1026.78px"],
+    "g36-taxa1":  ["662.33px", "1027.78px"],
+    "g36-taxa2":  ["712.33px", "1027.78px"]
+  }
+
 ,
 
-cartaz3: {
-  "g12-numero": ["230.7px", "1001.6px"],
-  "g12-parcela": ["302.4px", "1001.6px"],
-  "g12-total": ["302.4px", "1013.6px"],
-  "g12-cheio": ["408.7px", "1001.6px"],
-  "g12-taxa1": ["394.9px", "1019.9px"],
-  "g12-taxa2": ["445.6px", "1019.9px"],
+    cartaz3: {
+      "g12-numero": ["230.7px", "1001.6px"],
+      "g12-parcela": ["302.4px", "1001.6px"],
+      "g12-total": ["302.4px", "1013.6px"],
+      "g12-cheio": ["408.7px", "1001.6px"],
+      "g12-taxa1": ["394.9px", "1019.9px"],
+      "g12-taxa2": ["445.6px", "1019.9px"],
 
-  "g24-numero": ["230.7px", "1047.2px"],
-  "g24-parcela": ["296.8px", "1047.2px"],
-  "g24-total": ["296.8px", "1059.7px"],
-  "g24-cheio": ["408.7px", "1049.5px"],
-  "g24-taxa1": ["386.7px", "1069.2px"],
-  "g24-taxa2": ["438.0px", "1069.2px"],
+      "g24-numero": ["230.7px", "1047.2px"],
+      "g24-parcela": ["296.8px", "1047.2px"],
+      "g24-total": ["296.8px", "1059.7px"],
+      "g24-cheio": ["408.7px", "1049.5px"],
+      "g24-taxa1": ["386.7px", "1069.2px"],
+      "g24-taxa2": ["438.0px", "1069.2px"],
 
-  "g36-numero": ["536.4px", "1023.3px"],
-  "g36-parcela": ["596.3px", "1023.3px"],
-  "g36-total": ["596.3px", "1035.5px"],
-  "g36-cheio": ["708.6px", "1023.3px"],
-  "g36-taxa1": ["690.4px", "1035.5px"],
-  "g36-taxa2": ["744.8px", "1035.0px"]
-}
-
+      "g36-numero": ["536.4px", "1023.3px"],
+      "g36-parcela": ["596.3px", "1023.3px"],
+      "g36-total": ["596.3px", "1035.5px"],
+      "g36-cheio": ["708.6px", "1023.3px"],
+      "g36-taxa1": ["690.4px", "1035.5px"],
+      "g36-taxa2": ["744.8px", "1035.0px"]
+    }
   };
 
-  // Reseta para padrão (cartaz1)
+  // 0.4 cm = 4 mm = 15.12 px
+  const deslocamentoPx = 15.12;
+
+  // Reset padrão (cartaz1)
   if (cartazSelecionado === "cartaz1") {
     wrapper.querySelectorAll("[class*='g12-'], [class*='g24-'], [class*='g36-']").forEach(el => {
       el.style.left = "";
@@ -493,15 +497,43 @@ cartaz3: {
     return;
   }
 
-  // Aplica os ajustes do cartaz selecionado
   const ajustes = posicoesExtras[cartazSelecionado];
+  if (!ajustes) return;
+
+  // console.info para auditoria — mostra antes/depois
+  const audit = [];
+
   for (const cls in ajustes) {
     wrapper.querySelectorAll(`.${cls}`).forEach(el => {
-      el.style.left = ajustes[cls][0];
-      el.style.top = ajustes[cls][1];
+      // parse das strings "123.4px" para números
+      const leftNum = parseFloat(ajustes[cls][0]);
+      const topNum  = parseFloat(ajustes[cls][1]);
+
+      // calcula top final: se for cartaz2 aplica deslocamento exato; senão usa original
+      const topFinal = (cartazSelecionado === 'cartaz2')
+        ? (topNum + deslocamentoPx)
+        : topNum;
+
+      // escreve no estilo com 2 casas decimais (evita erro de rounding grande)
+      const leftStr = `${leftNum.toFixed(2)}px`;
+      const topStr  = `${topFinal.toFixed(2)}px`;
+
+      el.style.left = leftStr;
+      el.style.top  = topStr;
+
+      // adiciona ao audit log
+      audit.push({
+        cls,
+        appliedTo: el,
+        left: leftStr,
+        topBefore: `${topNum.toFixed(2)}px`,
+        topAfter: topStr
+      });
     });
   }
+
 }
+
 
 
 function contarCartazes() {
