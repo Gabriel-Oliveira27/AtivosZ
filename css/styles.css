@@ -769,37 +769,241 @@ overflow-y: auto
   display: flex;
   gap: 15px;
   grid-column: 1 / -1;
-  position: relative; /* essencial para que os elementos absolutos se posicionem em relação a este container */
+  position: relative;
 }
 
 .garantias-container .input-group {
   flex: 1;
 }
 
-/* ===== Garantia 12 meses - padrão A4 Azul ===== */
-.g12-numero   { position: absolute; left: 160px; top: 1000px; font-family: Arial; font-size: 11px; }
-.g12-parcela  { position: absolute; left: 200px; top: 1000px; font-family: Arial; font-size: 11px; }
-.g12-total    { position: absolute; left: 200px; top: 1020px; font-family: Arial; font-size: 11px; }
-.g12-cheio    { position: absolute; left: 260px; top: 1000px; font-family: Arial; font-size: 11px; }
-.g12-taxa1    { position: absolute; left: 250px; top: 1025px; font-family: Arial; font-size: 7px; }
-.g12-taxa2    { position: absolute; left: 280px; top: 1025px; font-family: Arial; font-size: 7px; }
+
+/* ===== Garantia 12 meses ===== */
+.g12-numero {
+  position: absolute;
+  left: 258px; 
+  top: 990px;   
+  width: 25px;   
+  height: 13px; 
+  font-family: Arial;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+
+.g12-parcela {
+  position: absolute;
+  left: 318px;   
+  top: 990px;   
+  width: 42px;  
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+
+.g12-cheio {
+  position: absolute;
+  left: 415px;   
+  top: 990px; 
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+
+.g12-total {
+  position: absolute;
+  left: 315px;   
+  top: 1005px;   
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g12-taxa1 {
+  position: absolute;
+  left: 399px;  
+  top: 1007px;  
+  width: 15px;  
+  height: 6px; 
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 5px;
+}
+.g12-taxa2 {
+  position: absolute;
+  left: 451px;  
+  top: 1007px;   
+  width: 15px;
+  height: 6px;
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 6px;
+}
 
 /* ===== Garantia +24 meses ===== */
-.g24-numero   { position: absolute; left: 160px; top: 1070px; font-family: Arial; font-size: 11px; }
-.g24-parcela  { position: absolute; left: 200px; top: 1070px; font-family: Arial; font-size: 11px; }
-.g24-total    { position: absolute; left: 200px; top: 1090px; font-family: Arial; font-size: 11px; }
-.g24-cheio    { position: absolute; left: 270px; top: 1070px; font-family: Arial; font-size: 11px; }
-.g24-taxa1    { position: absolute; left: 250px; top: 1095px; font-family: Arial; font-size: 7px; }
-.g24-taxa2    { position: absolute; left: 280px; top: 1095px; font-family: Arial; font-size: 7px; }
+.g24-numero {
+  position: absolute;
+  left: 258px;   
+  top: 1035px;   
+  width: 25px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g24-parcela {
+  position: absolute;
+  left: 318px;  
+  top: 1035px;   
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g24-cheio {
+  position: absolute;
+  left: 418px;  
+  top: 1035px;   
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g24-total {
+  position: absolute;
+  left: 318px;  
+  top: 1050px;   
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g24-taxa1 {
+  position: absolute;
+  left: 401px;  
+  top: 1050px;  
+  width: 15px;
+  height: 6px;
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 6px;
+}
+.g24-taxa2 {
+  position: absolute;
+  left: 451px;   
+  top: 1050px;  
+  width: 15px;
+  height: 6px;
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 6px;
+}
 
 /* ===== Garantia +36 meses ===== */
-.g36-numero   { position: absolute; left: 360px; top: 1060px; font-family: Arial; font-size: 11px; }
-.g36-parcela  { position: absolute; left: 400px; top: 1060px; font-family: Arial; font-size: 11px; }
-.g36-total    { position: absolute; left: 400px; top: 1080px; font-family: Arial; font-size: 11px; }
-.g36-cheio    { position: absolute; left: 460px; top: 1060px; font-family: Arial; font-size: 11px; }
-.g36-taxa1    { position: absolute; left: 450px; top: 1085px; font-family: Arial; font-size: 7px; }
-.g36-taxa2    { position: absolute; left: 480px; top: 1085px; font-family: Arial; font-size: 7px; }
 
+.g36-numero {
+  position: absolute;
+  left: 526px;   
+  top: 1007px;  
+  width: 25px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+
+.g36-parcela {
+  position: absolute;
+  left: 585px;  
+  top: 1007px;  
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g36-cheio {
+  position: absolute;
+  left: 690px;   
+  top: 1007px;   
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+
+.g36-total {
+  position: absolute;
+  left: 585px;  
+  top: 1022px;  
+  width: 42px;
+  height: 13px;
+  font-family: Arial;
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+  line-height: 13px;
+}
+.g36-taxa1 {
+  position: absolute;
+  left: 668px;  
+  top: 1023px;  
+  width: 15px;
+  height: 6px;
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 6px;
+}
+.g36-taxa2 {
+  position: absolute;
+  left: 718px;  
+  top: 1023px;   
+  width: 15px;
+  height: 6px;
+  font-family: Arial;
+  font-size: 7px;
+  color: #000;
+  text-align: center;
+  line-height: 6px;
+}
 
 
 
