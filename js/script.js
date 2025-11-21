@@ -463,51 +463,51 @@ function aplicarPosicoesGarantias(wrapper, cartazSelecionado) {
 ,
 
     posa5: {
-    "g12-numero": ["251px", "1023px"],
-    "g12-parcela":["312px", "1023px"],
-    "g12-cheio":  ["409px", "1023px"],
-    "g12-total":  ["309.33px", "1029px"],
-    "g12-taxa1":  ["393.62px", "1037.78px"],
-    "g12-taxa2":  ["444.55px", "1037.78px"],
+    "g12-numero": ["251px", "1026px"],
+    "g12-parcela":["312px", "1026px"],
+    "g12-cheio":  ["409px", "1026px"],
+    "g12-total":  ["309.33px", "1037px"],
+    "g12-taxa1":  ["393.65px", "1040px"],
+    "g12-taxa2":  ["444.55px", "1040px"],
 
     // ===== Garantia +24 meses =====
-    "g24-numero": ["251px", "1063px"],
-    "g24-parcela":["312.33px", "1063px"],
-    "g24-cheio":  ["412.33px", "1063px"],
-    "g24-total":  ["312.33px", "1080px"],
-    "g24-taxa1":  ["395.33px", "1078.78px"],
-    "g24-taxa2":  ["445.33px", "1078.78px"],
+    "g24-numero": ["251px", "1068px"],
+    "g24-parcela":["312.33px", "1068px"],
+    "g24-cheio":  ["412.33px", "1068px"],
+    "g24-total":  ["312.33px", "1084px"],
+    "g24-taxa1":  ["395.33px", "1090px"],
+    "g24-taxa2":  ["445.33px", "1090px"],
 
     // ===== Garantia +36 meses =====
     "g36-numero": ["520px", "1040px"],
     "g36-parcela":["579.33px", "1040.78px"],
     "g36-cheio":  ["684.33px", "1040.78px"],
-    "g36-total":  ["579.33px", "1051px"],
-    "g36-taxa1":  ["662.33px", "1039px"],
-    "g36-taxa2":  ["712.33px", "1039px"]
+    "g36-total":  ["579.33px", "1059px"],
+    "g36-taxa1":  ["662.33px", "1057px"],
+    "g36-taxa2":  ["712.33px", "1061px"]
     },
 
     posa6: {
-      "g12-numero": ["240px", "1023px"],
-      "g12-parcela": ["310px", "1023px"],
-      "g12-total": ["310px", "1023px"],
-      "g12-cheio": ["409px", "1046.30px"],
+      "g12-numero": ["250px", "1025px"],
+      "g12-parcela": ["310px", "1025px"],
+      "g12-total": ["310px", "1055px"],
+      "g12-cheio": ["409px", "1025px"],
       "g12-taxa1": ["394.9px", "1060px"],
       "g12-taxa2": ["445.6px", "1060px"],
 
-      "g24-numero": ["240px", "1055px"],
-      "g24-parcela": ["310px", "1047.2px"],
-      "g24-total": ["310px", "1059.7px"],
-      "g24-cheio": ["409px", "1049.5px"],
-      "g24-taxa1": ["394.9px", "1078px"],
-      "g24-taxa2": ["445.6px", "1078px"],
+      "g24-numero": ["250px", "1075px"],
+      "g24-parcela": ["310px", "1075px"],
+      "g24-total": ["310px", "1083px"],
+      "g24-cheio": ["409px", "1075px"],
+      "g24-taxa1": ["394.9px", "1083px"],
+      "g24-taxa2": ["445.6px", "1083px"],
 
-      "g36-numero": ["534px", "1040px"],
-      "g36-parcela": ["595px", "1040px"],
-      "g36-total": ["595px", "1051px"],
-      "g36-cheio": ["700px", "1040px"],
-      "g36-taxa1": ["690.4px", "1055.5px"],
-      "g36-taxa2": ["715px", "1055.5px"]
+      "g36-numero": ["530px", "1043px"],
+      "g36-parcela": ["590px", "1043px"],
+      "g36-total": ["590px", "1051px"],
+      "g36-cheio": ["695px", "1043px"],
+      "g36-taxa1": ["685px", "1058.5px"],
+      "g36-taxa2": ["715.1px", "1058.5px"]
     }
   };
 
