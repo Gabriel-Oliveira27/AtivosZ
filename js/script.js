@@ -369,8 +369,8 @@ function abrirPopupCartaz(callback) {
   const cartazes = [
     { nome: "Brother padrão", img: "Imagens/brother.jpeg", id: "cartaz1" },
     { nome: "HP", img: "Imagens/hp.jpeg", id: "poshp" },
-    { nome: "A5 Azul", img: "Imagens/cartaz-a5hp.png", id: "posa5" },
-    { nome: "A6 Azul", img: "Imagens/cartaz-a6hp.png", id: "posa6" }
+    { nome: "A5 Azul (HP)", img: "Imagens/cartaz-a5hp.png", id: "posa5" },
+    { nome: "A6 Azul (HP)", img: "Imagens/cartaz-a6hp.png", id: "posa6" }
   ];
 
 
@@ -488,26 +488,26 @@ function aplicarPosicoesGarantias(wrapper, cartazSelecionado) {
     },
 
     posa6: {
-      "g12-numero": ["256px", "1025px"],
-      "g12-parcela": ["310px", "1025px"],
-      "g12-total": ["310px", "1055px"],
-      "g12-cheio": ["409px", "1025px"],
-      "g12-taxa1": ["394.9px", "1060px"],
-      "g12-taxa2": ["445.6px", "1060px"],
+      "g12-numero": ["254px", "1029px"],
+      "g12-parcela": ["310px", "1029px"],
+      "g12-total": ["310px", "1051px"],
+      "g12-cheio": ["409px", "1029px"],
+      "g12-taxa1": ["394.9px", "1049px"],
+      "g12-taxa2": ["445.6px", "1049px"],
 
-      "g24-numero": ["256px", "1075px"],
-      "g24-parcela": ["310px", "1075px"],
+      "g24-numero": ["254px", "1076px"],
+      "g24-parcela": ["310px", "1076px"],
       "g24-total": ["310px", "1083px"],
-      "g24-cheio": ["409px", "1075px"],
+      "g24-cheio": ["409px", "1076px"],
       "g24-taxa1": ["394.9px", "1083px"],
       "g24-taxa2": ["445.6px", "1083px"],
 
-      "g36-numero": ["520px", "1043px"],
-      "g36-parcela": ["590px", "1043px"],
-      "g36-total": ["590px", "1051px"],
-      "g36-cheio": ["695px", "1043px"],
-      "g36-taxa1": ["685px", "1058.5px"],
-      "g36-taxa2": ["715.1px", "1058.5px"]
+      "g36-numero": ["520px", "1051px"],
+      "g36-parcela": ["590px", "1051px"],
+      "g36-total": ["590px", "1070px"],
+      "g36-cheio": ["695px", "1051px"],
+      "g36-taxa1": ["667px", "1071.5px"],
+      "g36-taxa2": ["715.1px", "1071.5px"]
     }
   };
 
