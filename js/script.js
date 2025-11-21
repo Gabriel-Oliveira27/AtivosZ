@@ -467,22 +467,22 @@ function aplicarPosicoesGarantias(wrapper, cartazSelecionado) {
     "g12-parcela":["312px", "1023px"],
     "g12-cheio":  ["409px", "1023px"],
     "g12-total":  ["309.33px", "1040px"],
-    "g12-taxa1":  ["394px", "1040px"],
-    "g12-taxa2":  ["446px", "1040px"],
+    "g12-taxa1":  ["395.40px", "1040px"],
+    "g12-taxa2":  ["445.50px", "1040px"],
 
     // ===== Garantia +24 meses =====
     "g24-numero": ["253px", "1069px"],
     "g24-parcela":["312.33px", "1069px"],
     "g24-cheio":  ["412.33px", "1069px"],
     "g24-total":  ["312.33px", "1084px"],
-    "g24-taxa1":  ["395.40px", "1093px"],
-    "g24-taxa2":  ["445.50px", "1093px"],
+    "g24-taxa1":  ["395.40px", "1091px"],
+    "g24-taxa2":  ["445.50px", "1091px"],
 
     // ===== Garantia +36 meses =====
-    "g36-numero": ["522px", "1038px"],
-    "g36-parcela":["579.33px", "1038px"],
-    "g36-cheio":  ["684.33px", "1038px"],
-    "g36-total":  ["579.33px", "1057px"],
+    "g36-numero": ["522px", "1039.50px"],
+    "g36-parcela":["579.33px", "1039.50px"],
+    "g36-cheio":  ["684.33px", "1039.50px"],
+    "g36-total":  ["579.33px", "1058px"],
     "g36-taxa1":  ["662.33px", "1060px"],
     "g36-taxa2":  ["712.33px", "1060px"]
     },
