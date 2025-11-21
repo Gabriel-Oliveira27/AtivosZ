@@ -463,51 +463,51 @@ function aplicarPosicoesGarantias(wrapper, cartazSelecionado) {
 ,
 
     posa5: {
-    "g12-numero": ["250px", "10px"],
-    "g12-parcela":["312px", "1050px"],
-    "g12-cheio":  ["409px", "1039px"],
-    "g12-total":  ["309.33px", "1030px"],
-    "g12-taxa1":  ["393.50px", "1037.78px"],
-    "g12-taxa2":  ["444.45px", "1037.78px"],
+    "g12-numero": ["251px", "1023px"],
+    "g12-parcela":["312px", "1023px"],
+    "g12-cheio":  ["409px", "1023px"],
+    "g12-total":  ["309.33px", "1029px"],
+    "g12-taxa1":  ["393.62px", "1037.78px"],
+    "g12-taxa2":  ["444.55px", "1037.78px"],
 
     // ===== Garantia +24 meses =====
-    "g24-numero": ["250px", "1062px"],
-    "g24-parcela":["312.33px", "1050.90px"],
-    "g24-cheio":  ["412.33px", "1050.90px"],
+    "g24-numero": ["251px", "1063px"],
+    "g24-parcela":["312.33px", "1063px"],
+    "g24-cheio":  ["412.33px", "1063px"],
     "g24-total":  ["312.33px", "1080px"],
-    "g24-taxa1":  ["395.33px", "1075.78px"],
-    "g24-taxa2":  ["445.33px", "1075.78px"],
+    "g24-taxa1":  ["395.33px", "1078.78px"],
+    "g24-taxa2":  ["445.33px", "1078.78px"],
 
     // ===== Garantia +36 meses =====
-    "g36-numero": ["520px", "1040.78px"],
+    "g36-numero": ["520px", "1040px"],
     "g36-parcela":["579.33px", "1040.78px"],
     "g36-cheio":  ["684.33px", "1040.78px"],
-    "g36-total":  ["579.33px", "1046.78px"],
-    "g36-taxa1":  ["662.33px", "1038.78px"],
-    "g36-taxa2":  ["712.33px", "1038.78px"]
+    "g36-total":  ["579.33px", "1051px"],
+    "g36-taxa1":  ["662.33px", "1039px"],
+    "g36-taxa2":  ["712.33px", "1039px"]
     },
 
     posa6: {
-      "g12-numero": ["235px", "1011px"],
-      "g12-parcela": ["305px", "1011px"],
-      "g12-total": ["305px", "1013.6px"],
-      "g12-cheio": ["408.7px", "1001.6px"],
-      "g12-taxa1": ["394.9px", "1019.9px"],
-      "g12-taxa2": ["445.6px", "1019.9px"],
+      "g12-numero": ["240px", "1023px"],
+      "g12-parcela": ["310px", "1023px"],
+      "g12-total": ["310px", "1023px"],
+      "g12-cheio": ["409px", "1046.30px"],
+      "g12-taxa1": ["394.9px", "1060px"],
+      "g12-taxa2": ["445.6px", "1060px"],
 
-      "g24-numero": ["230.7px", "1047.2px"],
-      "g24-parcela": ["296.8px", "1047.2px"],
-      "g24-total": ["296.8px", "1059.7px"],
-      "g24-cheio": ["408.7px", "1049.5px"],
-      "g24-taxa1": ["386.7px", "1069.2px"],
-      "g24-taxa2": ["438.0px", "1069.2px"],
+      "g24-numero": ["240px", "1055px"],
+      "g24-parcela": ["310px", "1047.2px"],
+      "g24-total": ["310px", "1059.7px"],
+      "g24-cheio": ["409px", "1049.5px"],
+      "g24-taxa1": ["394.9px", "1078px"],
+      "g24-taxa2": ["445.6px", "1078px"],
 
-      "g36-numero": ["536.4px", "1023.3px"],
-      "g36-parcela": ["596.3px", "1023.3px"],
-      "g36-total": ["596.3px", "1035.5px"],
-      "g36-cheio": ["708.6px", "1023.3px"],
-      "g36-taxa1": ["690.4px", "1035.5px"],
-      "g36-taxa2": ["744.8px", "1035.0px"]
+      "g36-numero": ["534px", "1040px"],
+      "g36-parcela": ["595px", "1040px"],
+      "g36-total": ["595px", "1051px"],
+      "g36-cheio": ["700px", "1040px"],
+      "g36-taxa1": ["690.4px", "1055.5px"],
+      "g36-taxa2": ["715px", "1055.5px"]
     }
   };
 
