@@ -86,4 +86,21 @@
     "Permissao": "suporte",
     "local": "iguatu"
   }
+  ,
+  {
+    "Nome": "Ionara Holanda da Rocha",
+    "CPF": "077.031.823-11",
+    "User": "ionara",
+    "Senha": "zenir02",
+    "Permissao": "suporte",
+    "local": "iguatu"
+  },
+  {
+    "Nome": "Nardila Martins Feitosa",
+    "CPF": "117.034.883-18",
+    "User": "nardila",
+    "Senha": "zenir02",
+    "Permissao": "suporte",
+    "local": "iguatu"
+  }
 ]
